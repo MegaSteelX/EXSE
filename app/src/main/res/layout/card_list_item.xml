@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal"
+	android:background="#FF505050"
+	android:id="@+id/list_item">
+
+	<LinearLayout
+		android:layout_height="match_parent"
+		android:layout_width="wrap_content"
+		android:orientation="vertical">
+
+		<ImageButton
+			android:layout_height="40dp"
+			android:layout_width="40dp"
+			android:src="@drawable/icon_copy"
+			android:scaleType="center"
+			android:id="@+id/list_copy"/>
+
+		<ImageButton
+			android:layout_height="40dp"
+			android:layout_width="40dp"
+			android:src="@drawable/icon_delete"
+			android:scaleType="center"
+			android:id="@+id/list_del"/>
+
+	</LinearLayout>
+
+	<ImageView
+		android:layout_height="80dp"
+		android:layout_width="80dp"
+		android:src="@android:drawable/ic_delete"
+		android:id="@+id/list_img"/>
+
+	<LinearLayout
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:orientation="vertical">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:text="Text"
+			android:textColor="#FF66CCFF"
+			android:id="@+id/list_title"
+			android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:text="Text"
+			android:id="@+id/list_text"/>
+
+	</LinearLayout>
+
+</LinearLayout>
+

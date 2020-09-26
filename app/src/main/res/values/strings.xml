@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<item type="id" name="tag_self"/>
+	<item type="id" name="tag_position"/>
+
+    <string name="app_name">EXSE</string>
+    <string name="setting">设置</string>
+	<string name="card_edit">卡片编辑</string>
+	<string name="positive">确定</string>
+	<string name="negative">取消</string>
+	<string name="infomation">消息</string>
+	<string name="warning">提示</string>
+	<string name="error">警告</string>
+	<string name="saveimg">输出图片</string>
+	
+	<string name="unclear_set_alert">上次未正常退出。读取未存档的套牌数据?</string>
+	<string name="delete_card_alert">确认删除卡片?此操作无法撤销！</string>
+	<string name="res_not_found_alert">未找到任何卡片样式资源。前往下载？否则退出软件</string>
+	<string name="open_savedata_alert">打开存档文件将清除当前套牌数据，请确认已经存档。</string>
+	<string name="clear_workspace_alert">确认清除当前套牌？此操作无法撤销！</string>
+	
+</resources>

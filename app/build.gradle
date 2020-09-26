@@ -1,0 +1,39 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.0"
+
+    defaultConfig {
+        applicationId "com.megasteelx.exse"
+        minSdkVersion 17
+        targetSdkVersion 21
+        versionCode 20200927
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+	compile 'com.github.relish-wang:ColorPicker:0.0.2-SNAPSHOT' // 0.x.x 老版本
+	//compile 'wang.relish.widget:colorpicker:1.0.0' // 1.x.x 新版本(支持AndroidX)
+	compile 'com.leon:lfilepickerlibrary:1.8.0'
+	compile 'com.android.support:support-v4:+'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '25.3.0'
+            }
+        }
+    }
+}
