@@ -173,14 +173,15 @@ public class SinglelineText extends EditText implements ItemInterface
 			imgChooserParent.setId(imgChooserId);
 			parent.addView(imgChooserParent,new AbsoluteLayout.LayoutParams(
 							   (int)(baseSize*mCore.width),
-							   (int)(baseSize*mCore.height),
+							   100,//(int)(baseSize*mCore.height),
 							   (int)(baseSize*mCore.left),
 							   (int)(baseSize*(mCore.top+mCore.height))
 						   ));
-			imgChooserParent.setBackgroundColor(0xCCFFFFFF);
+			imgChooserParent.setBackgroundColor(0xFFFFFFFF);
 			LinearLayout imgChooser=new LinearLayout(context);
 			imgChooserParent.addView(imgChooser);
 			imgChooser.setOrientation(LinearLayout.HORIZONTAL);
+			imgChooser.setGravity(Gravity.LEFT|Gravity.CENTER);
 			String[]ImgNames=new File(imgPath).list(new FilenameFilter(){
 					@Override
 					public boolean accept(File p1, String p2)
@@ -210,8 +211,8 @@ public class SinglelineText extends EditText implements ItemInterface
 				oneImg.setOnClickListener(imgClickListener);
 				imgChooser.addView(oneImg);
 				ViewGroup.LayoutParams imgparams=oneImg.getLayoutParams();
-				imgparams.height=(int)(baseSize*mCore.height);
-				imgparams.width=(int)(imgparams.height*1.125);
+				imgparams.height=(baseSize*mCore.height<100?(int)(baseSize*mCore.height):100);
+				imgparams.width=(int)(imgparams.height*1.2);
 				oneImg.setLayoutParams(imgparams);
 			}
 			imgChooserParent.setVisibility(View.GONE);

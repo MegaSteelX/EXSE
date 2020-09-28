@@ -311,7 +311,7 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 		ctrlBar.setId(ctrlBarId);
 		parent.addView(ctrlBar,new AbsoluteLayout.LayoutParams(
 				1000,
-				120,
+				100,
 				0+(int)(baseSize*mCore.left),
 				-120+(int)(baseSize*mCore.top)
 		));

@@ -2,58 +2,72 @@
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
-	android:layout_height="40dp"
+	android:layout_height="30dp"
 	android:orientation="horizontal">
 
 	<Button
 		android:layout_width="40dp"
-		android:layout_height="40dp"
+		android:layout_height="match_parent"
 		android:text="+"
-		android:id="@+id/barplus"/>
+		android:id="@+id/barplus"
+		android:background="#FFFFFFFF"
+		android:textColor="#FF000000"/>
 
 	<Button
 		android:layout_width="40dp"
-		android:layout_height="40dp"
+		android:layout_height="match_parent"
 		android:text="-"
+		android:background="#FFFFFFFF"
+		android:textColor="#FF000000"
 		android:id="@+id/barminus"/>
 
 	<Button
 		android:layout_width="30dp"
-		android:layout_height="40dp"
+		android:layout_height="match_parent"
 		android:text="&lt;"
+		android:background="#FFFFFFFF"
+		android:textColor="#FF000000"
 		android:id="@+id/barup"/>
 
 	<Button
 		android:layout_width="30dp"
-		android:layout_height="40dp"
+		android:layout_height="match_parent"
 		android:text="«"
+		android:background="#FFFFFFFF"
+		android:textColor="#FF000000"
 		android:id="@+id/barupup"/>
 
 	<TextView
 		android:layout_width="30dp"
-		android:layout_height="40dp"
+		android:layout_height="match_parent"
 		android:text="0"
 		android:gravity="center_vertical|center_horizontal"
 		android:id="@+id/barpos"
-		android:background="#FF414141"
-		android:textColor="#FFFFFFFF"/>
+		android:background="#FFFFFFFF"
+		android:textColor="#FF000000"/>
 
 	<Button
 		android:layout_width="30dp"
-		android:layout_height="40dp"
+		android:layout_height="match_parent"
 		android:text="»"
+		android:background="#FFFFFFFF"
+		android:textColor="#FF000000"
 		android:id="@+id/bardowndown"/>
 
 	<Button
 		android:layout_width="30dp"
-		android:layout_height="40dp"
+		android:layout_height="match_parent"
 		android:text="&gt;"
+		android:background="#FFFFFFFF"
+		android:textColor="#FF000000"
 		android:id="@+id/bardown"/>
 
 	<Button
 		android:layout_width="35dp"
-		android:layout_height="40dp"
+		android:layout_height="match_parent"
 		android:text="▼"
+		android:background="#FFFFFFFF"
+		android:textColor="#FF000000"
 		android:id="@+id/barnext"/>
 
 </LinearLayout>
