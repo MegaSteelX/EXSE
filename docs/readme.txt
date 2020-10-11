@@ -105,3 +105,8 @@ items.dfn中关于项目编组的特殊规则
 keys
 gravity：指定多个组如何相对排列。取值为horizontal时，横向排列；取值为vertical、未定义此属性、取值为其他“错误”值时，纵向排列。
 childs：在其后如同正常属性定义行地定义所有子item，使用%分隔。在子item定义中，按以下规则替换标点符号： /→!，:→_，;→-。
+ItemsGroup内嵌mark
+与标记/marks类似，在ItemGroup的组内通过某个项目的数据取值改变其他项目的样式。
+marks/文件夹下的<name>.mrk为其定义文件，其中<name>为对应ItemsGroup的名称。格式为
+<child1>=<data> -> <child2>{<extAttr2>},<child3>{<extAttr3>},… !> <child2>{<extAttr2'>},…
+其中<childX>为子项目的名称，->后的数据组为当条件=成立时，!>后的数据组为=条件不成立时，其他各需要变动的子项目之变动情况;{}内的extAttr完全按前述<ext-attribute>规则编写。
