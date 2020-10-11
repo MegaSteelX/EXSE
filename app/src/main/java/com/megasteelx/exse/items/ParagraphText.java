@@ -13,6 +13,8 @@ import android.widget.RadioGroup.*;
 
 public class ParagraphText extends EditText implements ItemInterface
 {
+	public int groupId = -1;//if is ItemGroup child then ItemGroup Id, else NULL.
+
 	ItemCore mCore;
 	int textSize=10;
 	//,icon1Size=10,icon2Size=10,icon1Width=20;
@@ -70,6 +72,9 @@ public class ParagraphText extends EditText implements ItemInterface
 					LogUtils.e(tempExtStl+"_not expected K-V pair");
 				}else{
 					//此处处理extstl键值对（伪）
+					if(extStlKVP[0].trim().equals("groupId")){
+						groupId=Integer.parseInt(extStlKVP[1].trim());
+					}
 					if(extStlKVP[0].trim().equals("textsize")){
 						textSize=Integer.parseInt(extStlKVP[1].trim());
 					}
@@ -257,7 +262,8 @@ public class ParagraphText extends EditText implements ItemInterface
 	@Override
 	public void returnData(Context context, String data)
 	{
-		((CardEditActivity)context).onReturnData(mCore.getName(),data);
+		mCore.data=data;
+		((CardEditActivity)context).onReturnData(mCore.getName(),data,groupId);
 	}
 	@Override
 	public void reDraw(Context context,ItemCore mCore, double baseSize)

@@ -11,6 +11,8 @@ import android.graphics.*;
 @SuppressLint("AppCompatCustomView")
 public class ExchangeImage extends ImageView implements ItemInterface
 {
+	public int groupId = -1;//if is ItemGroup child then ItemGroup Id, else NULL.
+
 	ItemCore mCore;
 	int dexNumber=0;
 	String folderpath="exchangeimgs";
@@ -39,12 +41,16 @@ public class ExchangeImage extends ImageView implements ItemInterface
 					LogUtils.e(tempExtStl+"_not expected K-V pair");
 				}else{
 					//此处处理extstl键值对（伪）
+					if(extStlKVP[0].trim().equals("groupId")){
+						groupId=Integer.parseInt(extStlKVP[1].trim());
+					}
 					if(extStlKVP[0].trim().equals("dex")){
 						dexNumber=Integer.parseInt(extStlKVP[1].trim());
 					}
 					if(extStlKVP[0].trim().equals("path")){
 						folderpath=extStlKVP[1].trim();
 					}
+					
 					//done.
 				}
 			}
@@ -84,7 +90,8 @@ public class ExchangeImage extends ImageView implements ItemInterface
 	@Override
 	public void returnData(Context context, String data)
 	{
-		((CardEditActivity)context).onReturnData(mCore.getName(),data);
+		mCore.data=data;
+		((CardEditActivity)context).onReturnData(mCore.getName(),data,groupId);
 	}
 
 	@Override

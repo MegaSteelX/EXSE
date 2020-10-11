@@ -22,9 +22,8 @@ import android.graphics.*;
 
 public class ChosableImage extends ImageView implements ItemInterface
 {
+	public int groupId = -1;//if is ItemGroup child then ItemGroup Id, else NULL.
 
-	
-	
     ItemCore mCore;
     private int mChoice=1;
     private boolean ShowVoid=false;
@@ -80,6 +79,9 @@ public class ChosableImage extends ImageView implements ItemInterface
 					LogUtils.e(tempExtStl+"_not expected name K-V pair");
 				}else{
 					//此处处理extstl键值对（伪）
+					if(extStlKVP[0].trim().equals("groupId")){
+						groupId=Integer.parseInt(extStlKVP[1].trim());
+					}
 					if(extStlKVP[0].trim().equals("showvoid")){
 						setShowVoid(Boolean.parseBoolean(extStlKVP[1].trim()));
 					}
@@ -221,7 +223,8 @@ public class ChosableImage extends ImageView implements ItemInterface
 	@Override
 	public void returnData(Context context, String data)
 	{
-		((CardEditActivity)context).onReturnData(mCore.getName(),data);
+		mCore.data=data;
+		((CardEditActivity)context).onReturnData(mCore.getName(),data,groupId);
 		LogUtils.w(data);
 	}
 	@Override
@@ -245,7 +248,6 @@ public class ChosableImage extends ImageView implements ItemInterface
 		));
 		dealExtStyle();
 		checkImage();
-		
 	}
 
 	@Override

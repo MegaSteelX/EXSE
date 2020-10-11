@@ -7,9 +7,11 @@ import com.megasteelx.exse.activities.*;
 import com.megasteelx.exse.utils.*;
 import java.util.*;
 import com.megasteelx.exse.*;
+import java.io.*;
 
 public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 {
+	public int groupId = -1;//if is ItemGroup child then ItemGroup Id, else NULL.
 
 	@Override
 	protected void onLayout(boolean p1, int p2, int p3, int p4, int p5)
@@ -37,7 +39,7 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 	public ItemsGroup(Context context,ItemCore core,int id){
 		super(context);
 		mCore=core;
-		
+		//LogUtils.d(id+"");
 		setFocusable(true);
 		setFocusableInTouchMode(true);
 		
@@ -143,17 +145,21 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
         for(int i=0;i<partNum;i++){
             for(int j=0;j<childPerPart;j++){
                 itemId=childIds.get(i)[j];
-                View v=null;
-                //try findview to ensure wether to redraw
                 try{
-                    v=parent.findViewById(itemId);
-                }catch (Exception e){
-                    isRedraw=false;
+					mParent.removeView(findViewById(itemId));
+					
+					//View v=mParent.findViewById(itemId);
+					//v.setId(generateViewId());
+					//v.setVisibility(GONE);
+					//
+					//parent.removeAllViews();
+                       }catch (Exception e){
+						   LogUtils.d(e.toString());
+                    //childCores.get(i)[j].drawView(parent,context,baseSize,childIds.get(i)[j],true);
                 }finally {
-                    if(v==null)isRedraw=false;
+                    childCores.get(i)[j].drawView(parent,context,baseSize,childIds.get(i)[j],false);
                 }
-                childCores.get(i)[j].drawView(parent,context,baseSize,childIds.get(i)[j],isRedraw);
-            }
+        	}
         }
     }
 	private void dealExtStyle(){
@@ -179,6 +185,8 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 						}else{
 							LogUtils.e("gravity '"+extStlKVP[1]+"' is not allowed. Legal values are horizontal and vertical");
 						}
+					}else if(extStlKVP[0].trim().equals("groupId")){
+						groupId=Integer.parseInt(extStlKVP[1].trim());
 					}
 					//done.
 				}
@@ -254,11 +262,59 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 			LogUtils.e(e.toString());
 		}
 	}
-	
+	private ArrayList<ArrayList<String>> readGroupMark(Context context){
+		//format: {reason,reason_value,result1,result1_extStl,result2,result2_extStl,"0",anti_result1,anti1_extStl,…}
+		ArrayList<ArrayList<String>> ret= new ArrayList<ArrayList<String>>();
+		ArrayList<String> result= new ArrayList<String>();
+		try{
+			String path=SettingUtils.PATH_SOURCE+"/"+SettingUtils.getCurrentStyle(context)+"/marks/"+mCore.name+".mrk";
+			if(!new File(path).exists()){
+				LogUtils.w("no mrk-file for group"+mCore.name);
+				return null;
+			}else{
+				String f=FileUtils.FileToString(path);
+				if(f.trim().equals("")){
+					throw new NullPointerException("empty mrk-file");
+				}
+				String[] str=f.trim().split("\n");
+				String[] seprated,reason,results;
+				for(int i=0;i<str.length;i++){
+					seprated=str[i].trim().split("->|!>");
+					if(seprated.length!=3)continue;
+					reason=seprated[0].split("=");
+					result.add(reason[0]);
+					result.add(reason[1]);
+					results=seprated[1].split(",");
+					
+					for(int j=0;j<results.length;j++){
+						//just not want to use another var
+						reason=results[j].replace("}","").replace("{","POI").split("POI");
+						result.add(reason[0]);
+						result.add(reason[1]);
+					}
+					result.add("0");
+					//anti-results
+					results=seprated[2].split(";");
+					for(int j=0;j<results.length;j++){
+						//just not want to use another var
+						reason=results[j].replace("}","").replace("{","POI").split("POI");
+						result.add(reason[0]);
+						result.add(reason[1]);
+					}
+					ret.add(result);
+					result=new ArrayList<String>();
+				}
+				return ret;
+			}
+		}catch(Exception e){
+			LogUtils.e(e.toString());
+			return null;
+		}
+	}
 	@Override
 	public void addToParent(final AbsoluteLayout parent, final Context context, final double baseSize)
 	{
-	    //mParent=parent;
+	    mParent=parent;
 		mContext=context;mBasesize=baseSize;
 		LogUtils.i("drawing IG@"+baseSize+mCore.width+mCore.height+mCore.left+mCore.top+"@"+parent);
 		setBackgroundResource(R.drawable.nu);
@@ -275,8 +331,9 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 			//deal with cores;
 			String[] tempString;
 			ItemCore[] tempCores=new ItemCore[childPerPart];
+			ItemCore tempItem;
 			for(int j=0;j<childPerPart;j++){
-				ItemCore tempItem=new ItemCore();
+				tempItem=new ItemCore();
 				try{
 					tempString=styleDescs[j].split("!");
 					tempItem.setType(childTypes[j]);
@@ -285,7 +342,7 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 					tempItem.setWidth(Integer.parseInt(tempString[1].trim()));
 					tempItem.setTop(Integer.parseInt(tempString[4].trim()));
 					tempItem.setLeft(Integer.parseInt(tempString[3].trim()));
-					tempItem.setExtStyle(tempString[5].replace('-',';').replace('_',':'));
+					tempItem.setExtStyle(tempString.length==5?"groupId:"+getId():"groupId:"+getId()+";"+tempString[5].replace('-',';').replace('_',':'));
 				}catch(ArrayIndexOutOfBoundsException e){
 					LogUtils.w("reading style_"+e.toString());
 				}catch(NumberFormatException e){
@@ -435,11 +492,63 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 			}
 		});
 	}
-
+	
+	public void dealDataUpdate(Context context,String data){
+		//LogUtils.d(groupId+"get");
+		ArrayList<ArrayList<String>> marks=readGroupMark(context);
+		ArrayList<String> tmark;
+		String tstr;
+		ItemCore[] tcores;
+		ItemCore tcore;
+		int startIndex=0;
+		
+		try{
+		if(marks!=null){
+		for(int i=0;i<childCores.size();i++){
+			tcores=childCores.get(i);
+			for(int j=0;j<marks.size();j++){
+				tmark=marks.get(j);
+				for(int l=0;l<tcores.length;l++){
+					tcore=tcores[l];
+					if(tcore.name.equals(tmark.get(0))){
+						LogUtils.d(tcore.data);LogUtils.d(tmark.get(1));
+						
+						if(tcore.data.equals(tmark.get(1))){
+							startIndex=2;
+						}else{
+							startIndex=tmark.indexOf("0")+1;
+						}
+						LogUtils.d(startIndex+"");
+					}
+				}
+				for(int k=startIndex;k<tmark.size();k+=2){
+					tstr=tmark.get(k);
+					if(tstr.equals("0"))break;
+					for(int m=0;m<tcores.length;m++){
+						tcore=tcores[m];
+						if(tcore.name.equals(tstr)){
+							tcore.extStyle=(tcore.extStyle.isEmpty()?tmark.get(k+1):tcore.extStyle+";"+tmark.get(k+1));
+						}
+					}
+				}
+			}
+		}
+		refreshView(mParent,context,mBasesize);
+		}
+		}catch(Exception e){
+			LogUtils.d(e.toString());
+		}
+		//((CardEditActivity)context).refreshCardView();
+	}
+	public String getData(){
+		return encodeData();
+	}
 	@Override
 	public void returnData(Context context, String data)
 	{
-		((CardEditActivity)context).onReturnData(mCore.getName(),data);
+		mCore.data=data;
+		((CardEditActivity)context).onReturnData(mCore.getName(),data,groupId);
+		
 	}
 
 	@Override

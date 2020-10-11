@@ -16,6 +16,8 @@ import java.lang.reflect.*;
 @SuppressLint("AppCompatCustomView")
 public class SinglelineText extends EditText implements ItemInterface
 {
+	public int groupId = -1;//if is ItemGroup child then ItemGroup Id, else NULL.
+
 	ItemCore mCore;
 	int textSize=10,icon1Size=10,icon2Size=10,icon1Width=20;
 	Typeface mTypeface=null;
@@ -68,6 +70,10 @@ public class SinglelineText extends EditText implements ItemInterface
 					LogUtils.e(tempExtStl+"_not expected K-V pair");
 				}else{
 					//此处处理extstl键值对（伪）
+					LogUtils.d(tempExtStl);
+					if(extStlKVP[0].trim().equals("groupId")){
+						groupId=Integer.parseInt(extStlKVP[1].trim());
+					}
 					if(extStlKVP[0].trim().equals("textsize")){
 						textSize=Integer.parseInt(extStlKVP[1].trim());
 					}
@@ -301,7 +307,8 @@ public class SinglelineText extends EditText implements ItemInterface
 	@Override
 	public void returnData(Context context, String data)
 	{
-		((CardEditActivity)context).onReturnData(mCore.getName(),data);
+		mCore.data=data;
+		((CardEditActivity)context).onReturnData(mCore.getName(),data,groupId);
 	}
 	@Override
 	public void reDraw(Context context,ItemCore mCore, double baseSize)
@@ -314,6 +321,7 @@ public class SinglelineText extends EditText implements ItemInterface
 							(int)(baseSize*mCore.top)
 						));
 		dealExtStyle();
+		setTextColor(0xFF000000+textColor);
 		setTextSize(TypedValue.COMPLEX_UNIT_PX,(int)(textSize*baseSize));
 		if(withStoke){
 			stokeText=(TextView) ((AbsoluteLayout)getParent()).findViewById(stokeTextId);
@@ -334,7 +342,6 @@ public class SinglelineText extends EditText implements ItemInterface
 										  (int)(baseSize*(mCore.top+mCore.height))
 									  ));
 		}
-		setTextColor(0xFF000000+textColor);
 		if(!withImgSpan){fixWidth(baseSize);}
 	}
 	private void fixWidth(double baseSize){

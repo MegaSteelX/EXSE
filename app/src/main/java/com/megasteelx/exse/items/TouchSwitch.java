@@ -8,6 +8,8 @@ import com.megasteelx.exse.*;
 
 public class TouchSwitch extends ImageView implements ItemInterface
 {
+	public int groupId = -1;//if is ItemGroup child then ItemGroup Id, else NULL.
+	
 	ItemCore mCore;
 	boolean sWitch;
 	
@@ -51,7 +53,8 @@ public class TouchSwitch extends ImageView implements ItemInterface
 	@Override
 	public void returnData(Context context, String data)
 	{
-		((CardEditActivity)context).onReturnData(mCore.getName(),data);
+		mCore.data=data;
+		((CardEditActivity)context).onReturnData(mCore.getName(),data,groupId);
 	}
 	
 	@Override

@@ -31,16 +31,25 @@ public class CardEditActivity extends Activity
 	public int getViewId(String s){
 		return idMap.get(s);
 	}
-	public void onReturnData(String itemName,String data){
+	public void onReturnData(String itemName,String data,int groupId){
 		//check cardmarks.
 		//确认返回的item Toast.makeText(this,itemName+data,Toast.LENGTH_SHORT).show();
-		cardData.setItemData(itemName,data);
-		card.linkData(cardData);
-		//Toast.makeText(this,cardData.toString(),Toast.LENGTH_SHORT).show();
-		cardMarks.checkMarks(cardData,SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/marks/marks.dfn");
-		if(cardMarks.isChanged()){
-			cardSet.setCard(cardSetDex,cardData.toString());
-			refreshCardView();
+		if(groupId==-1){
+			//is not ItemGroup child, do normal check
+			cardData.setItemData(itemName,data);
+			card.linkData(cardData);
+			//Toast.makeText(this,cardData.toString(),Toast.LENGTH_SHORT).show();
+			cardMarks.checkMarks(cardData,SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/marks/marks.dfn");
+			if(cardMarks.isChanged()){
+				cardSet.setCard(cardSetDex,cardData.toString());
+				refreshCardView();
+			}
+		}else{
+			//is ItemGroup child
+			ItemsGroup ig=(ItemsGroup)(findViewById(groupId));
+			ig.dealDataUpdate(this,data);
+			cardData.setItemData(itemName,ig.getData());
+			card.linkData(cardData);
 		}
 	}
 

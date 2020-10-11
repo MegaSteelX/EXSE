@@ -10,7 +10,8 @@ import android.util.*;
 
 public class PictureLoader extends ImageView implements ItemInterface
 {
-
+	public int groupId = -1;//if is ItemGroup child then ItemGroup Id, else NULL.
+	
 	ItemCore mCore;
 	int clickeeId;//,id;
 	int[] clickZone;
@@ -52,6 +53,9 @@ public class PictureLoader extends ImageView implements ItemInterface
 					LogUtils.e(tempExtStl+"_not expected K-V pair");
 				}else{
 					//此处处理extstl键值对（伪）
+					if(extStlKVP[0].trim().equals("groupId")){
+						groupId=Integer.parseInt(extStlKVP[1].trim());
+					}
 					if(extStlKVP[0].trim().equals("clickzone")){
 						extZone=extStlKVP[1];
 					}
@@ -109,7 +113,8 @@ public class PictureLoader extends ImageView implements ItemInterface
 	@Override
 	public void returnData(Context context, String data)
 	{
-		((CardEditActivity)context).onReturnData(mCore.getName(),data);
+		mCore.data=data;
+		((CardEditActivity)context).onReturnData(mCore.getName(),data,groupId);
 	}
 	@Override
 	public void reDraw(Context context,ItemCore more, double baseSize)
