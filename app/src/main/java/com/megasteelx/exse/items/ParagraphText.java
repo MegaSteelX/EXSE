@@ -99,20 +99,8 @@ public class ParagraphText extends EditText implements ItemInterface
 					if(extStlKVP[0].trim().equals("vertical")){
 						vertical=Boolean.parseBoolean(extStlKVP[1].trim());
 					}
-					/*
-					if(extStlKVP[0].trim().equals("iconsize1")){
-						String temp=extStlKVP[1];
-						icon1Size=Integer.parseInt(temp.trim());
-					}
-					if(extStlKVP[0].trim().equals("iconsize2")){
-						String temp=extStlKVP[1];
-						icon2Size=Integer.parseInt(temp.trim());
-					}
-					if(extStlKVP[0].trim().equals("icon1width")){
-						String temp=extStlKVP[1];
-						icon1Width=Integer.parseInt(temp.trim());
-					}
-					*/
+					//TODO auto-Traditional-Chinese
+					//TODO auto-full/half char
 					//done.
 				}
 			}

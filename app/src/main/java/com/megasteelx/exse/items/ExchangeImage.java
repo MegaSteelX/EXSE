@@ -44,7 +44,7 @@ public class ExchangeImage extends ImageView implements ItemInterface
 					if(extStlKVP[0].trim().equals("groupId")){
 						groupId=Integer.parseInt(extStlKVP[1].trim());
 					}
-					if(extStlKVP[0].trim().equals("dex")){
+					if(extStlKVP[0].trim().equals("index")){
 						dexNumber=Integer.parseInt(extStlKVP[1].trim());
 					}
 					if(extStlKVP[0].trim().equals("path")){

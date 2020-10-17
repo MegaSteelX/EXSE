@@ -24,8 +24,8 @@ public class SinglelineText extends EditText implements ItemInterface
 	String typeName="";
 	int textColor=0xFFFFFF;
 	int stokeColor=0x000000;
-	int stokeWidth=2,stokeTextId;
-	boolean vertical=false;
+	int stokeWidth=0,stokeTextId;
+	int vertical=0;
 	boolean withStoke=false;
 	//boolean m_bDrawSideLine=true;//false;
 	boolean withImgSpan=false,haveImgSpan=false;
@@ -110,10 +110,10 @@ public class SinglelineText extends EditText implements ItemInterface
 					}
 					if(extStlKVP[0].trim().equals("stokecolor")){
 						String temp=extStlKVP[1];
-						stokeColor=Color.parseColor(temp.trim());
+						stokeColor=Integer.parseInt(temp.replace("#","").trim(),16);
 					}
 					if(extStlKVP[0].trim().equals("vertical")){
-						vertical=Boolean.parseBoolean(extStlKVP[1].trim());
+						vertical=Integer.parseInt(extStlKVP[1].trim());
 					}
 					//done.
 				}
@@ -147,7 +147,6 @@ public class SinglelineText extends EditText implements ItemInterface
 			stokeText.setText(mCore.getData());
 			TextPaint stokePaint=stokeText.getPaint();
 			stokePaint.setStyle(Paint.Style.STROKE);
-			stokePaint.setColor(stokeColor);
 			stokePaint.setStrokeWidth(stokeWidth);
 			parent.addView(stokeText,new AbsoluteLayout.LayoutParams(
 							   (int)(baseSize*mCore.width),
@@ -161,6 +160,7 @@ public class SinglelineText extends EditText implements ItemInterface
 			stokeText.setSingleLine(true);
 			stokeText.setGravity(getGravity());
 			stokeText.setTextSize(TypedValue.COMPLEX_UNIT_PX,getTextSize());
+			stokeText.setTextColor(0xFF000000+stokeColor);
 		}
 		setText(mCore.getData());
 		if(mTypeface!=null){
@@ -228,10 +228,18 @@ public class SinglelineText extends EditText implements ItemInterface
 		//finished.
 		//deal rotation
 		if(!withImgSpan){fixWidth(baseSize);}
-		if(vertical){
-			setRotation(90);
+		if(vertical>0){
+			if(vertical==1)setRotation(90);
+			else{
+			setSingleLine(false);
+			setMaxEms(1);
+			}
 			if(withStoke){
-				stokeText.setRotation(90);
+				if(vertical==1)setRotation(90);
+				else{
+					stokeText.setSingleLine(false);
+					stokeText.setMaxEms(1);
+				}
 				if(!typeName.isEmpty()){
 					File aiteTypeFile=new File(SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/fonts/@"+typeName);
 					if(aiteTypeFile.exists()){
@@ -345,17 +353,44 @@ public class SinglelineText extends EditText implements ItemInterface
 		if(!withImgSpan){fixWidth(baseSize);}
 	}
 	private void fixWidth(double baseSize){
+		//setBackgroundColor(Color.MAGENTA);
 		setTextSize(TypedValue.COMPLEX_UNIT_PX,(float)(baseSize*(double)textSize));
+		if(vertical<2){
 		//调整横向宽度(先缩小字号，再纵向拉伸)
-		while(getLayoutParams().width<getPaint().measureText(getText().toString()))
-			setTextSize(TypedValue.COMPLEX_UNIT_PX,getTextSize()-1);
-        float real_size=(float)(textSize*baseSize);
-        setScaleY(real_size/getTextSize());
-		if(withStoke){
-			stokeText=(TextView) ((AbsoluteLayout)getParent()).findViewById(stokeTextId);
-			stokeText.setTextSize(TypedValue.COMPLEX_UNIT_PX,getTextSize());
-			stokeText.setScaleY(getScaleY());
+			while(getLayoutParams().width<getPaint().measureText(getText().toString()))
+				setTextSize(TypedValue.COMPLEX_UNIT_PX,getTextSize()-1);
+       		float real_size=(float)(textSize*baseSize);
+        	setScaleY(real_size/getTextSize());
+			if(withStoke){
+				stokeText=(TextView) ((AbsoluteLayout)getParent()).findViewById(stokeTextId);
+				stokeText.setTextSize(TypedValue.COMPLEX_UNIT_PX,getTextSize());
+				stokeText.setScaleY(getScaleY());
+			}
+		}else{
+			float u=1;
+			setLineSpacing(0,1);
+			while(getLayoutParams().height<(fontheight(getTextSize()))*u*(stokeWidth+textSize)/textSize*getText().toString().replace("\n","").length()){
+				setTextSize(TypedValue.COMPLEX_UNIT_PX,getTextSize()-1);
+				u*=0.992;
+				setLineSpacing(0,u);
+			}
+       		//setMaxEms(1);
+			float real_size=(float)(textSize*baseSize);
+        	//setScaleX(real_size/getTextSize());
+			if(withStoke){
+				stokeText=(TextView) ((AbsoluteLayout)getParent()).findViewById(stokeTextId);
+				stokeText.setTextSize(TypedValue.COMPLEX_UNIT_PX,getTextSize());
+				stokeText.setMaxEms(1);
+				stokeText.setLineSpacing(0,u);//(stokeWidth+textSize)/textSize);//getLineSpacingExtra(),getLineSpacingMultiplier());
+				//stokeText.setScaleX(getScaleY());
+			}
 		}
+	}
+	private int fontheight(float size){
+		Paint p= new Paint();
+		p.setTextSize(size);
+		Paint.FontMetrics fm=p.getFontMetrics();
+		return(int)Math.ceil(fm.descent-fm.top)+2;
 	}
 	/*
 	private TextPaint m_TextPaint;

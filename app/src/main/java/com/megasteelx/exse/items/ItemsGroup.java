@@ -128,9 +128,9 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 				extLeft=Integer.parseInt(dataPart[1].trim());
             }
 			for(int j=0;j<childDatas.length;j++){
-                childCores.get(i)[j].setData(childDatas[j]);
-                childCores.get(i)[j].setTop(mCore.getTop()+extTop+(i>0&&!isHorizon?childCores.get(i-1)[0].getHeight():0));
-                childCores.get(i)[j].setLeft(mCore.getLeft()+extLeft+(i>0&&isHorizon?childCores.get(i-1)[0].getWidth():0));
+                childCores.get(i)[j].data=(childDatas[j]);
+                childCores.get(i)[j].top+=(mCore.getTop()+extTop+(i>0&&!isHorizon?childCores.get(i-1)[0].getHeight():0));
+                childCores.get(i)[j].left+=(mCore.getLeft()+extLeft+(i>0&&isHorizon?childCores.get(i-1)[0].getWidth():0));
             }
         }
 	}
@@ -146,11 +146,13 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
             for(int j=0;j<childPerPart;j++){
                 itemId=childIds.get(i)[j];
                 try{
-					mParent.removeView(findViewById(itemId));
+					//mParent.removeView(findViewById(itemId));
 					
-					//View v=mParent.findViewById(itemId);
-					//v.setId(generateViewId());
-					//v.setVisibility(GONE);
+					View v=mParent.findViewById(itemId);
+					if(v!=null){
+						v.setId(generateViewId());
+						v.setVisibility(GONE);
+					}
 					//
 					//parent.removeAllViews();
                        }catch (Exception e){
@@ -249,8 +251,8 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 			giveId(childIds.size()-1);
 			for(int i=0;i<len;i++){
 				newCores[i]=(ItemCore)tempCores[i].clone();
-				if(!isHorizon)newCores[i].setTop(tempCores[i].getTop()+tempCores[0].getHeight());
-				else newCores[i].setLeft(tempCores[i].getLeft()+tempCores[0].getWidth());
+				newCores[i].setTop(tempCores[i].getTop()+(isHorizon?0:tempCores[0].getHeight()));
+				newCores[i].setLeft(tempCores[i].getLeft()+(isHorizon?tempCores[0].getWidth():0));
 			}
 			childCores.add(newCores);
 			childTrans.add(0);
@@ -361,6 +363,7 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 		}
 		mCore.setData(encodeData());
 		refreshView(parent,context,baseSize);
+		dealDataUpdate(context,mCore.getData());
 		
 		LayoutInflater barLayoutinf= LayoutInflater.from(context);
 		ctrlBar=(LinearLayout)barLayoutinf.inflate(R.layout.itemgroup_bar,null);
@@ -372,7 +375,6 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 				0+(int)(baseSize*mCore.left),
 				-120+(int)(baseSize*mCore.top)
 		));
-		
 		Button partPlusButton=parent.findViewById(ctrlBarId).findViewById(R.id.barplus);
 		partPlusButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -468,6 +470,7 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 					}else{
 						parent.findViewById(ctrlBarId)
 						.setVisibility(VISIBLE);
+						parent.bringChildToFront(parent.findViewById(ctrlBarId));
 						showButtonFlag=true;
 					}
 					
