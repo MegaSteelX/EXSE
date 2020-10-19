@@ -34,7 +34,7 @@ public class FileUtils
     }
 	
 	public static String FileToHush(File source){
-		String data = FileToString(source.getPath());
+		String data = FileToStrings(source.getPath());
 
 		try
 		{
@@ -70,7 +70,35 @@ public class FileUtils
 			return false;
 		}
 	}
-	public static String FileToString(String filePath)
+	public static String[] FileToLines(String filePath)
+	{
+		String src=FileToStrings(filePath);
+		if(src.equals("")){
+			LogUtils.e("empty file:_"+filePath);
+			return new String[0];
+		}
+		String[] temp=src.trim().split("\n");
+		int i=0,realLines=0;
+		String tmpstr="",lastLine="";
+		String[] lines=new String[temp.length];
+		for(;i<temp.length;i++){
+			tmpstr=lastLine+temp[i];
+			if(tmpstr.startsWith("//")) continue;
+			if(tmpstr.endsWith("…")){
+				lastLine=tmpstr.substring(0,tmpstr.length()-1).trim();
+			}else{
+				lines[realLines++]=tmpstr;
+				lastLine="";
+			}
+		}
+		realLines--;
+		String[] result=new String[realLines];
+		for(int k=0;k<realLines;k++){
+			result[k]=lines[k];
+		}
+		return result;
+	}
+	public static String FileToStrings(String filePath)
 	{
 		if(! new File(filePath).exists()){
 			LogUtils.e(filePath+"_not a file");

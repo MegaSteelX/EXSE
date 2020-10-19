@@ -44,7 +44,7 @@ public class ParagraphText extends EditText implements ItemInterface
 		//获取字体
 		File fontdir=new File(SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/fonts");
 		String namedfn="names.dfn";
-		String[]namespair=FileUtils.FileToString(fontdir.getPath()+"/"+namedfn).trim().split("\n");
+		String[]namespair=FileUtils.FileToLines(fontdir.getPath()+"/"+namedfn);//.trim().split("\n");
 		boolean nameReadFlag=false;
 		for(int i=0;i<namespair.length;i++){
 			if(namespair[i].startsWith(mCore.getName())){

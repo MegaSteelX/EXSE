@@ -274,11 +274,11 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 				LogUtils.w("no mrk-file for group"+mCore.name);
 				return null;
 			}else{
-				String f=FileUtils.FileToString(path);
+				/*String f=FileUtils.FileToString(path);
 				if(f.trim().equals("")){
 					throw new NullPointerException("empty mrk-file");
-				}
-				String[] str=f.trim().split("\n");
+				}*/
+				String[] str=FileUtils.FileToLines(path);//f.trim().split("\n");
 				String[] seprated,reason,results;
 				for(int i=0;i<str.length;i++){
 					seprated=str[i].trim().split("->|!>");

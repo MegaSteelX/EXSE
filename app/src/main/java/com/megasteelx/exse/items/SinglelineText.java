@@ -23,16 +23,21 @@ public class SinglelineText extends EditText implements ItemInterface
 	Typeface mTypeface=null;
 	String typeName="";
 	int textColor=0xFFFFFF;
+	int vertical=0;
 	int stokeColor=0x000000;
 	int stokeWidth=0,stokeTextId;
-	int vertical=0;
 	boolean withStoke=false;
+	TextView stokeText;
+	
+	boolean withShadow=false;
+	int shadowColor=0x000000;
+	float shadowDx=0f;
+	float shadowDy=0f;
+	float shadowRidus=0f;
 	//boolean m_bDrawSideLine=true;//false;
 	boolean withImgSpan=false,haveImgSpan=false;
 	//with:是否显示,have:是否存在
 	int imgChooserId;
-	TextView stokeText;
-	
 	public SinglelineText(Context context,ItemCore core,int id){
 		super(context);
 		setBackground(null);
@@ -42,7 +47,7 @@ public class SinglelineText extends EditText implements ItemInterface
 		//获取字体
 		File fontdir=new File(SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/fonts");
 		String namedfn="names.dfn";
-		String[]namespair=FileUtils.FileToString(fontdir.getPath()+"/"+namedfn).trim().split("\n");
+		String[]namespair=FileUtils.FileToLines(fontdir.getPath()+"/"+namedfn);//.trim().split("\n");
 		boolean nameReadFlag=false;
 		for(int i=0;i<namespair.length;i++){
 			if(namespair[i].startsWith(mCore.getName())){
@@ -115,6 +120,18 @@ public class SinglelineText extends EditText implements ItemInterface
 					if(extStlKVP[0].trim().equals("vertical")){
 						vertical=Integer.parseInt(extStlKVP[1].trim());
 					}
+					if(extStlKVP[0].trim().equals("withshadow")){
+						withShadow=Boolean.parseBoolean(extStlKVP[1].trim());
+					}
+					if(extStlKVP[0].trim().equals("shadowx")){
+						shadowDx=Integer.parseInt(extStlKVP[1].trim());
+					}
+					if(extStlKVP[0].trim().equals("shadowy")){
+						shadowDy=Integer.parseInt(extStlKVP[1].trim());
+					}
+					if(extStlKVP[0].trim().equals("shadowr")){
+						shadowRidus=Integer.parseInt(extStlKVP[1].trim());
+					}
 					//done.
 				}
 			}
@@ -131,15 +148,7 @@ public class SinglelineText extends EditText implements ItemInterface
 	public void addToParent(final AbsoluteLayout parent, final Context context, final double baseSize)
 	{
 		LogUtils.i("drawing ST@"+baseSize+mCore.width+mCore.height+mCore.left+mCore.top+"@"+parent);
-		parent.addView(this,new AbsoluteLayout.LayoutParams(
-						   (int)(baseSize*mCore.width),
-						   (int)(baseSize*mCore.height),
-						   (int)(baseSize*mCore.left),
-						   (int)(baseSize*mCore.top)
-					   ));
 		
-		
-		setTextSize(TypedValue.COMPLEX_UNIT_PX,(int)(textSize*baseSize));
 		if(withStoke){
 			stokeTextId=View.generateViewId();
 			stokeText=new TextView(context);
@@ -147,6 +156,7 @@ public class SinglelineText extends EditText implements ItemInterface
 			stokeText.setText(mCore.getData());
 			TextPaint stokePaint=stokeText.getPaint();
 			stokePaint.setStyle(Paint.Style.STROKE);
+			stokeWidth=(int)(stokeWidth*baseSize);
 			stokePaint.setStrokeWidth(stokeWidth);
 			parent.addView(stokeText,new AbsoluteLayout.LayoutParams(
 							   (int)(baseSize*mCore.width),
@@ -162,7 +172,17 @@ public class SinglelineText extends EditText implements ItemInterface
 			stokeText.setTextSize(TypedValue.COMPLEX_UNIT_PX,getTextSize());
 			stokeText.setTextColor(0xFF000000+stokeColor);
 		}
+		parent.addView(this,new AbsoluteLayout.LayoutParams(
+						   (int)(baseSize*mCore.width),
+						   (int)(baseSize*mCore.height),
+						   (int)(baseSize*mCore.left),
+						   (int)(baseSize*mCore.top)
+					   ));
+
+
+		setTextSize(TypedValue.COMPLEX_UNIT_PX,(int)(textSize*baseSize));
 		setText(mCore.getData());
+		
 		if(mTypeface!=null){
 			setTypeface(mTypeface);
 		}else{
@@ -170,7 +190,17 @@ public class SinglelineText extends EditText implements ItemInterface
 		}
 		setTextColor(0xFF000000+textColor);
 		setSingleLine(true);
+		
+		//deal shadow
+		if(withShadow){
+			shadowDx*=baseSize;
+			shadowDy*=baseSize;
+			shadowRidus*=baseSize;
+			shadowColor+=0xFF000000;
+			setShadowLayer(shadowRidus,shadowDx,shadowDy,shadowColor);
+		}
 		//处理图文混排
+		
 		String imgPath=SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/"+mCore.getName();
 		if(new File(imgPath).isDirectory()){
 			haveImgSpan=true;
@@ -225,9 +255,11 @@ public class SinglelineText extends EditText implements ItemInterface
 		}else if(withImgSpan){
 			LogUtils.w(mCore.getName()+"_no icon(s) found to add");
 		}
+		
 		//finished.
 		//deal rotation
-		if(!withImgSpan){fixWidth(baseSize);}
+		if(!withImgSpan)fixWidth(baseSize);
+		else changeSpan(baseSize);
 		if(vertical>0){
 			if(vertical==1)setRotation(90);
 			else{
@@ -367,11 +399,12 @@ public class SinglelineText extends EditText implements ItemInterface
 				stokeText.setScaleY(getScaleY());
 			}
 		}else{
-			float u=1;
+			float u=1,p=0.992f;
+			int tim=0;
 			setLineSpacing(0,1);
 			while(getLayoutParams().height<(fontheight(getTextSize()))*u*(stokeWidth+textSize)/textSize*getText().toString().replace("\n","").length()){
 				setTextSize(TypedValue.COMPLEX_UNIT_PX,getTextSize()-1);
-				u*=0.992;
+				u*=p;tim++;
 				setLineSpacing(0,u);
 			}
        		//setMaxEms(1);
@@ -381,7 +414,7 @@ public class SinglelineText extends EditText implements ItemInterface
 				stokeText=(TextView) ((AbsoluteLayout)getParent()).findViewById(stokeTextId);
 				stokeText.setTextSize(TypedValue.COMPLEX_UNIT_PX,getTextSize());
 				stokeText.setMaxEms(1);
-				stokeText.setLineSpacing(0,u);//(stokeWidth+textSize)/textSize);//getLineSpacingExtra(),getLineSpacingMultiplier());
+				stokeText.setLineSpacing(0,(float)Math.pow(p+0*1/textSize*(stokeWidth+textSize),tim));//getLineSpacingExtra(),getLineSpacingMultiplier());
 				//stokeText.setScaleX(getScaleY());
 			}
 		}

@@ -330,7 +330,7 @@ public class CardEditActivity extends Activity
 				{
 					switch(p1.getId()){
 					case R.id.cv_addc:
-						cardSet.addCard(FileUtils.FileToString(SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/new_card.dfn").replace("card:","").trim());
+						cardSet.addCard(FileUtils.FileToStrings(SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/new_card.dfn").replace("card:","").trim());
 						barAdapter.notifyDataSetChanged();
 						break;
 					case R.id.cv_open:
