@@ -152,8 +152,13 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 					if(v!=null){
 						v.setId(generateViewId());
 						v.setVisibility(GONE);
+						try{
+							((SinglelineText)v).removeStroke();
+						}catch(Exception e){
+
+						}
 					}
-					//
+					
 					//parent.removeAllViews();
                        }catch (Exception e){
 						   LogUtils.d(e.toString());
@@ -238,6 +243,11 @@ public class ItemsGroup extends AbsoluteLayout implements ItemInterface
 			tmpLp.x+=isHorizon?trans*baseSize:0;
 			tmpLp.y+=isHorizon?0:trans*baseSize;
 			tempView.setLayoutParams(tmpLp);
+			try{
+				((SinglelineText)tempView).moveStoke();
+			}catch(Exception e){
+				continue;
+			}
 		}
 	}
 	private void addItem(){

@@ -106,4 +106,12 @@ public class ExchangeImage extends ImageView implements ItemInterface
 						));
 		solveImage();
 	}
+
+	@Override
+	protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect)
+	{
+		if(gainFocus)performClick();
+		super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+	}
+	
 }

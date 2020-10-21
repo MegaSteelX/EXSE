@@ -321,18 +321,29 @@ public class ParagraphText extends EditText implements ItemInterface
 		Log.e("",getTextSize()+"|"+realTextLength+"|"+maxFullCharNum);
 		if(realTextLength>maxFullCharNum && mOOZmode!=textOOZmode.noFix){
 			//操作edittext：减小字号或增加一行的高度
+			AbsoluteLayout.LayoutParams params=(AbsoluteLayout.LayoutParams) getLayoutParams();
 			switch(mOOZmode){
 				case fixTextSize:
 					setTextSize(TypedValue.COMPLEX_UNIT_PX,getTextSize()-1);
-					Log.e("",getTextSize()+"|"+realTextLength+"|"+maxFullCharNum);
+					Log.d("",getTextSize()+"|"+realTextLength+"|"+maxFullCharNum);
 					break;
 				case fixViewTop:
+					params.y-=1;
+					params.height+=1;
+					setLayoutParams(params);
 					break;
 				case fixViewBottom:
+					params.height+=1;
+					setLayoutParams(params);
 					break;
 				case fixViewLeft:
+					params.x-=1;
+					params.width+=1;
+					setLayoutParams(params);
 					break;
 				case fixViewRight:
+					params.width+=1;
+					setLayoutParams(params);
 					break;
 				default:
 					LogUtils.e(mOOZmode+"_is not analyzable OOZmode");

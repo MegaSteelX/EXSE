@@ -91,7 +91,6 @@ public class FileUtils
 				lastLine="";
 			}
 		}
-		realLines--;
 		String[] result=new String[realLines];
 		for(int k=0;k<realLines;k++){
 			result[k]=lines[k];

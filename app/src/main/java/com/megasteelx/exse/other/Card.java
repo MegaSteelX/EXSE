@@ -31,8 +31,10 @@ public class Card
 		return resPath+"/common.mdl";
 	}
 	public void clearAll(){
-		for(int i=0;i<mCores.size();i++){
+		/*for(int i=0;i<mCores.size();i++){
 			mCores.remove(0);}
+		*/
+		mCores.clear();
 	}
 	public void readCardStyle(String path){
 		//path:*.mdl
@@ -49,7 +51,11 @@ public class Card
 				if(!tempString[1].equals("!"))tempItem.setWidth(Integer.parseInt(tempString[1].trim()));
 				if(!tempString[4].equals("!"))tempItem.setTop(Integer.parseInt(tempString[4].trim()));
 				if(!tempString[3].equals("!"))tempItem.setLeft(Integer.parseInt(tempString[3].trim()));
-				tempItem.setExtStyle(tempString[5]);
+				if(path.endsWith("common.mdl")){
+					tempItem.setExtStyle(tempString[5]);
+				}else{
+					tempItem.setExtStyle(tempItem.getExtStyle()+";"+tempString[5]);
+				}
 			}catch(ArrayIndexOutOfBoundsException e){
 				LogUtils.w("reading style_"+e.toString());
 			}catch(NumberFormatException e){

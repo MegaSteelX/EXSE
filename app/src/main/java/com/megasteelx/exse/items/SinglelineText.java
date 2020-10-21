@@ -12,6 +12,7 @@ import android.view.*;
 import android.widget.ImageView.*;
 import android.widget.RadioGroup.*;
 import java.lang.reflect.*;
+import android.view.ViewGroup.*;
 
 @SuppressLint("AppCompatCustomView")
 public class SinglelineText extends EditText implements ItemInterface
@@ -310,8 +311,7 @@ public class SinglelineText extends EditText implements ItemInterface
 				@Override
 				public void onTextChanged(CharSequence p1, int p2, int p3, int p4)
 				{
-					if(!withImgSpan){fixWidth(baseSize);}
-					
+					if(!p1.equals("")&&!withImgSpan){fixWidth(baseSize);}
 				}
 
 				@Override
@@ -424,6 +424,22 @@ public class SinglelineText extends EditText implements ItemInterface
 		p.setTextSize(size);
 		Paint.FontMetrics fm=p.getFontMetrics();
 		return(int)Math.ceil(fm.descent-fm.top)+2;
+	}
+	protected void moveStoke(){
+		if(withStoke){
+			stokeText=((AbsoluteLayout)getParent()).findViewById(stokeTextId);
+			AbsoluteLayout.LayoutParams pms =(AbsoluteLayout.LayoutParams)stokeText.getLayoutParams();
+			AbsoluteLayout.LayoutParams pms1=(AbsoluteLayout.LayoutParams)getLayoutParams();
+			pms.x=pms1.x;
+			pms.y=pms1.y;
+			
+		}
+	}
+	protected void removeStroke(){
+		if(withStoke){
+			stokeText=((AbsoluteLayout)getParent()).findViewById(stokeTextId);
+			stokeText.setText("");
+		}
 	}
 	/*
 	private TextPaint m_TextPaint;
