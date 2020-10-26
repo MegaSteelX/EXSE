@@ -144,7 +144,7 @@ public class FlexImage extends RelativeLayout implements ItemInterface
 		//crop
 		int[] cropx=new int[]{0,cropZone[0],cropZone[2],(int)(strechWidth*baseSize)};
 		int[] cropy=new int[]{0,cropZone[1],cropZone[3],(int)(strechHeight*baseSize)};
-			LogUtils.d(0+","+cropZone[0]+","+cropZone[2]+","+(int)(strechWidth*baseSize)+"="+0+","+cropZone[1]+","+cropZone[3]+","+(int)(strechHeight*baseSize));
+			//LogUtils.d(0+","+cropZone[0]+","+cropZone[2]+","+(int)(strechWidth*baseSize)+"="+0+","+cropZone[1]+","+cropZone[3]+","+(int)(strechHeight*baseSize));
 		//scale
 			int[] strex=new int[]{0,cropZone[0],cropZone[2]+(int)(baseSize*mCore.width)-(int)(strechWidth*baseSize),(int)(baseSize*mCore.width)};
 			int[] strey=new int[]{0,cropZone[1],cropZone[3]+(int)(baseSize*mCore.height)-(int)(strechHeight*baseSize),(int)(baseSize*mCore.height)};
@@ -185,7 +185,7 @@ public class FlexImage extends RelativeLayout implements ItemInterface
 
 		//todo
 		}catch(Exception e){
-			LogUtils.d(e.toString());
+			//LogUtils.d(e.toString());
 		}
 	}
 

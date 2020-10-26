@@ -14,7 +14,7 @@ public class LogUtils
 	private static String LOG_FILE_NAME="log.txt";
 	private static ArrayList<String>logger=new ArrayList<String>();
 	private static void publishLog(char type,String log){
-		Log.e(type+"",log);
+		//Log.e(type+"",log);
 		logger.add(type+"\t:\t"+log);
 	}
 	public static void displayLog(int dex,TextView logView){

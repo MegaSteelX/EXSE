@@ -3,6 +3,14 @@ import java.io.*;
 
 public class StringUtils
 {
+	public static String reverse(String src){
+		return new StringBuffer(src).reverse().toString();
+	}
+	public static String replaceLast(String src,String regx,String result){
+		String rep=reverse(src);
+		rep=rep.replaceFirst(reverse(regx),reverse(result));
+		return reverse(rep);
+	}
 	public static String fixName(String filename, String suffix)
 	{
 		String filesname=filename;

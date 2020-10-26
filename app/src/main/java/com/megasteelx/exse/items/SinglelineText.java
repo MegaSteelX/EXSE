@@ -76,7 +76,7 @@ public class SinglelineText extends EditText implements ItemInterface
 					LogUtils.e(tempExtStl+"_not expected K-V pair");
 				}else{
 					//此处处理extstl键值对（伪）
-					LogUtils.d(tempExtStl);
+					//LogUtils.d(tempExtStl);
 					if(extStlKVP[0].trim().equals("groupId")){
 						groupId=Integer.parseInt(extStlKVP[1].trim());
 					}
@@ -321,7 +321,7 @@ public class SinglelineText extends EditText implements ItemInterface
 						stokeText=(TextView) ((AbsoluteLayout)getParent()).findViewById(stokeTextId);
 						stokeText.setText(getText());
 					}
-					returnData(context,getText().toString().isEmpty()?"NULL":getText().toString());
+					//returnData(context,getText().toString().isEmpty()?"NULL":getText().toString());
 				}
 			});
 		setOnFocusChangeListener(new OnFocusChangeListener(){
@@ -338,7 +338,13 @@ public class SinglelineText extends EditText implements ItemInterface
 						v.setVisibility(View.GONE);
 						}
 					}
-					returnData(context,getText().toString());
+					if(!p2)
+					{
+						returnData(context,getText().toString());
+						setCursorVisible(false);
+					}else{
+						setCursorVisible(true);
+					}
 				}
 			});
 		

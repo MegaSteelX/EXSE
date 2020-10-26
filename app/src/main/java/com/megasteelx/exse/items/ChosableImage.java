@@ -205,7 +205,7 @@ public class ChosableImage extends ImageView implements ItemInterface
 					setImage(SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/"+mCore.getName()+"/"+childFolder+"/"+realFileName.get(dex-1),false);
 					returnData(context,virtualFileName.get(dex-1));
 				}
-				return true;
+				return false;
 			}
 		};
         setOnClickListener(new OnClickListener(){

@@ -47,7 +47,7 @@ public class CardEditActivity extends Activity
 		}else{
 			//is ItemGroup child
 			ItemsGroup ig=(ItemsGroup)(findViewById(groupId));
-			ig.dealDataUpdate(this,data);
+			ig.dealDataUpdate((AbsoluteLayout)findViewById(R.id.cardview),this,data);
 			cardData.setItemData(itemName,ig.getData());
 			card.linkData(cardData);
 		}
