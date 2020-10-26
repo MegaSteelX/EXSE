@@ -99,6 +99,17 @@ public class ParagraphText extends EditText implements ItemInterface
 					if(extStlKVP[0].trim().equals("vertical")){
 						vertical=Boolean.parseBoolean(extStlKVP[1].trim());
 					}
+					if(extStlKVP[0].trim().equals("textstyle")){
+						TextPaint tp=getPaint();
+						if(extStlKVP[1].contains("N")){
+							tp.setFlags(0);
+							tp.setTextSkewX(0);
+						}
+						if(extStlKVP[1].contains("I"))tp.setTextSkewX(-0.25f);
+						if(extStlKVP[1].contains("B"))tp.setFlags(tp.getFlags()|Paint.FAKE_BOLD_TEXT_FLAG);
+						if(extStlKVP[1].contains("U"))tp.setFlags(tp.getFlags()|Paint.UNDERLINE_TEXT_FLAG);
+						if(extStlKVP[1].contains("S"))tp.setFlags(tp.getFlags()|Paint.STRIKE_THRU_TEXT_FLAG);
+					}
 					//TODO auto-Traditional-Chinese
 					//TODO auto-full/half char
 					//done.
@@ -225,7 +236,7 @@ public class ParagraphText extends EditText implements ItemInterface
 				@Override
 				public void afterTextChanged(Editable p1)
 				{
-					returnData(context,getText().toString().isEmpty()?"NULL":getText().toString());
+					//returnData(context,getText().toString().isEmpty()?"NULL":getText().toString());
 				}
 			});
 		setOnFocusChangeListener(new OnFocusChangeListener(){
@@ -242,7 +253,8 @@ public class ParagraphText extends EditText implements ItemInterface
 						v.setVisibility(View.GONE);
 						}
 					}
-					returnData(context,getText().toString());
+					if(!p2)
+						returnData(context,getText().toString());
 				}
 			});
 	}
