@@ -8,6 +8,7 @@ import android.graphics.*;
 import android.view.ViewGroup.*;
 import android.graphics.drawable.*;
 import android.widget.ImageView.*;
+import com.megasteelx.exse.*;
 
 public class FlexImage extends RelativeLayout implements ItemInterface
 {
@@ -21,7 +22,16 @@ public class FlexImage extends RelativeLayout implements ItemInterface
 	String srcFileName="";
 	boolean isSrcDot9=false;
 	boolean inited=false;
-
+	LinearLayout VctrlBar=null;
+	LinearLayout HctrlBar=null;
+	int VctrlBarId,HctrlBarId;
+	int Vflex=0,Hflex=0;
+	boolean showButtonFlag=false;
+	private enum flexDir{FLEX_TOP,FLEX_BOTTOM,FLEX_LEFT,FLEX_RIGHT}
+	flexDir vFlexDir=flexDir.FLEX_TOP;
+	flexDir hFlexDir=flexDir.FLEX_LEFT;
+	String dir="";
+	
 	public FlexImage(Context context,ItemCore core,int id){
 		super(context);
 		mCore=core;
@@ -34,6 +44,7 @@ public class FlexImage extends RelativeLayout implements ItemInterface
 		imgPicId= new int[3][3];
 		imagePics=new ImageView[3][3];
 		cropZone=new int[]{1,1,2,2};
+		decodeData(mCore.getData());
 		//srcFileName=core.name;
 	}
 	private void dealExtStyle(){
@@ -63,6 +74,14 @@ public class FlexImage extends RelativeLayout implements ItemInterface
 					if(extStlKVP[0].trim().equals("height")){
 						strechHeight=Integer.parseInt(extStlKVP[1].trim());
 						isStrechHdfned=true;
+					}
+					if(extStlKVP[0].trim().equals("direction")){
+						String s=extStlKVP[1];
+						if(s.contains("T"))vFlexDir=flexDir.FLEX_TOP;
+						if(s.contains("B"))vFlexDir=flexDir.FLEX_BOTTOM;
+						if(s.contains("L"))hFlexDir=flexDir.FLEX_LEFT;
+						if(s.contains("R"))hFlexDir=flexDir.FLEX_RIGHT;
+						dir=s;
 					}
 					if(extStlKVP[0].trim().equals("flexzone")){
 						String[] tstr=extStlKVP[1].trim().split("×");
@@ -94,7 +113,7 @@ public class FlexImage extends RelativeLayout implements ItemInterface
 	}
 
 	@Override
-	public void addToParent(AbsoluteLayout parent, Context context, double baseSize)
+	public void addToParent(final AbsoluteLayout parent, final Context context, final double baseSize)
 	{
 		try{
 		LogUtils.i("drawing FI@"+baseSize+mCore.width+mCore.height+mCore.left+mCore.top+"@"+parent);
@@ -109,7 +128,7 @@ public class FlexImage extends RelativeLayout implements ItemInterface
 		else isSrcDot9=false;
 		int hei=res.getHeight(),wid=res.getWidth();
 		int shei=strechHeight,swid=strechWidth;
-		int s2hei=(int)(baseSize*mCore.height),s2wid=(int)(baseSize*mCore.width);
+		//int s2hei=(int)(baseSize*mCore.height),s2wid=(int)(baseSize*mCore.width);
 		//get crop data
 		if(isSrcDot9){
 			boolean flag=true;
@@ -171,24 +190,215 @@ public class FlexImage extends RelativeLayout implements ItemInterface
 				imgv.setLayoutParams(params);
 				imgv.setImageBitmap(Bitmap.createBitmap(res,cropx[i],cropy[j],cropx[i+1]-cropx[i],cropy[j+1]-cropy[j]));
 				imgv.setScaleType(ScaleType.FIT_XY);
-				imgv.setOnTouchListener(new OnTouchListener(){
-
-						@Override
-						public boolean onTouch(View p1, MotionEvent p2)
-						{
-							return true;
-						}
-					});
+				imgv.setClickable(true);
+				imgv.setFocusable(true);
+				imgv.setFocusableInTouchMode(true);
 			}
 		}
 		inited=true;
+		
+		//bar
+			LayoutInflater Layoutinf= LayoutInflater.from(context);
+			VctrlBar = (LinearLayout)Layoutinf.inflate(R.layout.fleximage_bar, null);
+			VctrlBarId = View.generateViewId();
+			VctrlBar.setId(VctrlBarId);
+			parent.addView(VctrlBar, new AbsoluteLayout.LayoutParams(
+							   1000,
+							   100,
+							   -100 + (int)(baseSize * mCore.left),
+							   -100 + (int)(baseSize * mCore.top)
+						   ));
+			VctrlBar.setPivotX(0);VctrlBar.setPivotY(100);
+			VctrlBar.setRotation(90);
+			Button VtransPlus1Button=parent.findViewById(VctrlBarId).findViewById(R.id.fibardown);
+			VtransPlus1Button.setOnClickListener(new OnClickListener(){
 
+					@Override
+					public void onClick(View p1)
+					{
+						Vflex+=1;
+						flex(context,parent,baseSize);
+						
+					}
+				});
+			Button VtransPlus10Button=parent.findViewById(VctrlBarId).findViewById(R.id.fibardowndown);
+			VtransPlus10Button.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View p1)
+					{
+						Vflex+=10;
+						flex(context,parent,baseSize);
+					}
+				});
+			Button VtransMinus1Button=parent.findViewById(VctrlBarId).findViewById(R.id.fibarup);
+			VtransMinus1Button.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View p1)
+					{
+						if(Vflex>1)Vflex-=1;
+						flex(context,parent,baseSize);
+					}
+				});
+			Button VtransMinus10Button=parent.findViewById(VctrlBarId).findViewById(R.id.fibarupup);
+			VtransMinus10Button.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View p1)
+					{
+						if(Vflex>10)Vflex-=10;
+						flex(context,parent,baseSize);
+					}
+				});
+			
+			HctrlBar = (LinearLayout)Layoutinf.inflate(R.layout.fleximage_bar, null);
+			HctrlBarId = View.generateViewId();
+			HctrlBar.setId(HctrlBarId);
+			parent.addView(HctrlBar, new AbsoluteLayout.LayoutParams(
+							   1000,
+							   100,
+							   0 + (int)(baseSize * mCore.left),
+							   -100 + (int)(baseSize * mCore.top)
+						   ));
+			Button HtransPlus1Button=parent.findViewById(HctrlBarId).findViewById(R.id.fibardown);
+			HtransPlus1Button.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View p1)
+					{
+						Hflex+=1;
+						flex(context,parent,baseSize);
+					}
+				});
+			Button HtransPlus10Button=parent.findViewById(HctrlBarId).findViewById(R.id.fibardowndown);
+			HtransPlus10Button.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View p1)
+					{
+						Hflex+=10;
+						flex(context,parent,baseSize);
+					}
+				});
+			Button HtransMinus1Button=parent.findViewById(HctrlBarId).findViewById(R.id.fibarup);
+			HtransMinus1Button.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View p1)
+					{
+						if(Hflex>1)Hflex-=1;
+						flex(context,parent,baseSize);
+					}
+				});
+			Button HtransMinus10Button=parent.findViewById(HctrlBarId).findViewById(R.id.fibarupup);
+			HtransMinus10Button.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View p1)
+					{
+						if(Hflex>10)Hflex-=10;
+						flex(context,parent,baseSize);
+					}
+				});
+			
+			flex(context,parent,baseSize);
+			
+			((LinearLayout)parent.findViewById(VctrlBarId)).setVisibility(GONE);
+			((LinearLayout)parent.findViewById(HctrlBarId)).setVisibility(GONE);
+			
+			ImageView.OnClickListener onc=new ImageView.OnClickListener(){
+
+				@Override
+				public void onClick(View p1)
+				{
+					if (showButtonFlag)
+					{
+						if(dir.contains("T")||dir.contains("B"))parent.findViewById(VctrlBarId)
+								.setVisibility(GONE);
+						if(dir.contains("L")||dir.contains("R"))parent.findViewById(HctrlBarId)
+								.setVisibility(GONE);
+						returnData(context, encodeData());
+						showButtonFlag = false;
+					}
+					else
+					{
+						if(dir.contains("T")||dir.contains("B")){
+							parent.findViewById(VctrlBarId)
+								.setVisibility(VISIBLE);
+							parent.bringChildToFront(parent.findViewById(VctrlBarId));
+
+						}
+						if(dir.contains("L")||dir.contains("R")){
+							parent.findViewById(HctrlBarId)
+								.setVisibility(VISIBLE);
+							parent.bringChildToFront(parent.findViewById(HctrlBarId));
+
+						}
+						showButtonFlag = true;
+					}
+				}
+			};
+			for(int i=0;i<3;i++){
+				for(int j=0;j<3;j++){
+					(imagePics[i][j]).setOnClickListener(onc);
+				}
+			}
+			/*setOnFocusChangeListener(new OnFocusChangeListener(){
+
+					@Override
+					public void onFocusChange(View p1, boolean p2)
+					{
+						if (p2)
+						{
+
+						}
+						else
+						{
+							if (showButtonFlag)
+							{
+								parent.findViewById(VctrlBarId)
+									.setVisibility(GONE);
+								parent.findViewById(HctrlBarId)
+									.setVisibility(GONE);
+								showButtonFlag = false;
+								returnData(context, encodeData());
+							}
+						}
+					}
+				});*/
 		//todo
 		}catch(Exception e){
-			//LogUtils.d(e.toString());
+			LogUtils.d(e.toString());
 		}
 	}
 
+	private String encodeData(){
+		return Vflex+"×"+Hflex;
+	}
+	private void decodeData(String data){
+		try{
+			String[] dat=data.trim().split("×");
+			if(dat.length!=2)throw new Exception("invalid data");
+			Vflex=Integer.parseInt(dat[0]);
+			Hflex=Integer.parseInt(dat[1]);
+		}catch(Exception e){
+			LogUtils.e(e.toString());
+		}
+	}
+	private void flex(Context context,AbsoluteLayout parent,double baseSize){
+		AbsoluteLayout.LayoutParams pms=(AbsoluteLayout.LayoutParams) getLayoutParams();
+		pms.height=(int)((mCore.getHeight()+Vflex)*baseSize);
+		pms.width=(int)((mCore.getWidth()+Hflex)*baseSize);
+		if(vFlexDir==flexDir.FLEX_TOP)pms.y=(int)((mCore.getTop()-Vflex)*baseSize);
+		if(hFlexDir==flexDir.FLEX_LEFT)pms.x=(int)((mCore.getLeft()-Hflex)*baseSize);
+		setLayoutParams(pms);
+		
+		((TextView)(parent.findViewById(VctrlBarId).findViewById(R.id.fibarnum))).setText(""+Vflex);
+		((TextView)(parent.findViewById(HctrlBarId).findViewById(R.id.fibarnum))).setText(""+Hflex);	
+		
+		returnData(context,Vflex+"×"+Hflex);
+	}
 	@Override
 	public void setLayoutParams(ViewGroup.LayoutParams params)
 	{

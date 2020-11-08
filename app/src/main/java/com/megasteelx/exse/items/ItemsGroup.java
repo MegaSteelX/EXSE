@@ -257,7 +257,7 @@ public class ItemsGroup extends ImageView implements ItemInterface {
 		currentPosi = i;
 		try
 		{
-			TextView pos=((View)getParent()).findViewById(ctrlBarId).findViewById(R.id.barpos);
+			TextView pos=((View)getParent()).findViewById(ctrlBarId).findViewById(R.id.igbarpos);
 			pos.setText(i + 1 + "");
 		}
 		catch (Exception e)
@@ -488,7 +488,7 @@ public class ItemsGroup extends ImageView implements ItemInterface {
 						   0 + (int)(baseSize * mCore.left),
 						   -120 + (int)(baseSize * mCore.top)
 					   ));
-		Button partPlusButton=parent.findViewById(ctrlBarId).findViewById(R.id.barplus);
+		Button partPlusButton=parent.findViewById(ctrlBarId).findViewById(R.id.igbarplus);
 		partPlusButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View p1)
@@ -499,7 +499,7 @@ public class ItemsGroup extends ImageView implements ItemInterface {
 				}
 			});
 
-		Button lastPartMinusButton=parent.findViewById(ctrlBarId).findViewById(R.id.barminus);
+		Button lastPartMinusButton=parent.findViewById(ctrlBarId).findViewById(R.id.igbarminus);
 		lastPartMinusButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View p1)
@@ -528,7 +528,7 @@ public class ItemsGroup extends ImageView implements ItemInterface {
 				}
 			});
 
-		Button transPlus1Button=parent.findViewById(ctrlBarId).findViewById(R.id.bardown);
+		Button transPlus1Button=parent.findViewById(ctrlBarId).findViewById(R.id.igbardown);
 		transPlus1Button.setOnClickListener(new OnClickListener(){
 
 				@Override
@@ -537,7 +537,7 @@ public class ItemsGroup extends ImageView implements ItemInterface {
 					removeCurrentChild(context, parent, baseSize, 1);
 				}
 			});
-		Button transPlus10Button=parent.findViewById(ctrlBarId).findViewById(R.id.bardowndown);
+		Button transPlus10Button=parent.findViewById(ctrlBarId).findViewById(R.id.igbardowndown);
 		transPlus10Button.setOnClickListener(new OnClickListener(){
 
 				@Override
@@ -546,7 +546,7 @@ public class ItemsGroup extends ImageView implements ItemInterface {
 					removeCurrentChild(context, parent, baseSize, 10);
 				}
 			});
-		Button transMinus1Button=parent.findViewById(ctrlBarId).findViewById(R.id.barup);
+		Button transMinus1Button=parent.findViewById(ctrlBarId).findViewById(R.id.igbarup);
 		transMinus1Button.setOnClickListener(new OnClickListener(){
 
 				@Override
@@ -555,7 +555,7 @@ public class ItemsGroup extends ImageView implements ItemInterface {
 					removeCurrentChild(context, parent, baseSize, -1);
 				}
 			});
-		Button transMinus10Button=parent.findViewById(ctrlBarId).findViewById(R.id.barupup);
+		Button transMinus10Button=parent.findViewById(ctrlBarId).findViewById(R.id.igbarupup);
 		transMinus10Button.setOnClickListener(new OnClickListener(){
 
 				@Override
@@ -564,7 +564,7 @@ public class ItemsGroup extends ImageView implements ItemInterface {
 					removeCurrentChild(context, parent, baseSize, -10);
 				}
 			});
-		Button posiChangeButton=parent.findViewById(ctrlBarId).findViewById(R.id.barnext);
+		Button posiChangeButton=parent.findViewById(ctrlBarId).findViewById(R.id.igbarnext);
 		posiChangeButton.setOnClickListener(new OnClickListener(){
 
 				@Override

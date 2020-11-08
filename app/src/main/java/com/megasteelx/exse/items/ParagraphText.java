@@ -16,7 +16,7 @@ public class ParagraphText extends EditText implements ItemInterface
 	public int groupId = -1;//if is ItemGroup child then ItemGroup Id, else NULL.
 
 	ItemCore mCore;
-	int textSize=10;
+	int textSize=10,iconSize=10;
 	//,icon1Size=10,icon2Size=10,icon1Width=20;
 	Typeface mTypeface=null;
 	String typeName="";
@@ -89,6 +89,10 @@ public class ParagraphText extends EditText implements ItemInterface
 						String temp=extStlKVP[1];
 						withImgSpan=Boolean.parseBoolean(temp.trim());
 					}
+					if(extStlKVP[0].trim().equals("iconsize")){
+						String temp=extStlKVP[1];
+						iconSize=Integer.parseInt(temp.trim());
+					}
 					if(extStlKVP[0].trim().equals("linespace")){
 						lineSpace=Float.parseFloat(extStlKVP[1].trim());
 						setLineSpacing(0,lineSpace);
@@ -118,7 +122,7 @@ public class ParagraphText extends EditText implements ItemInterface
 		}//extstl处理完毕。
 	}
 	private void changeSpan(double baseSize){
-		OtherUtils.InsertIconToText(this,baseSize,SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/"+mCore.getName(),textSize,textSize,textSize);
+		OtherUtils.InsertIconToText(this,baseSize,SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/"+mCore.getName(),iconSize,iconSize,iconSize);
 	}
 	@Override
 	public void addToParent(final AbsoluteLayout parent, final Context context, final double baseSize)
@@ -163,13 +167,34 @@ public class ParagraphText extends EditText implements ItemInterface
 			imgChooserId=View.generateViewId();
 			HorizontalScrollView imgChooserParent=new HorizontalScrollView(context);
 			imgChooserParent.setId(imgChooserId);
-			parent.addView(imgChooserParent,new AbsoluteLayout.LayoutParams(
-							   (int)(baseSize*mCore.width),
-							   (int)(baseSize*mCore.height),
-							   (int)(baseSize*mCore.left),
-							   (int)(baseSize*(mCore.top+mCore.height))
-						   ));
-			imgChooserParent.setBackgroundColor(0xCCFFFFFF);
+			if(groupId==-1){
+				parent.addView(imgChooserParent,new AbsoluteLayout.LayoutParams(
+								   (int)(baseSize*mCore.width),
+								   100,//(int)(baseSize*mCore.height),
+								   (int)(baseSize*mCore.left),
+								   (int)(baseSize*(mCore.top)-100)//mCore.height))
+							   ));
+			}else{
+				ImageView group=parent.findViewById(groupId);
+				if(group!=null){
+					AbsoluteLayout.LayoutParams pam=(AbsoluteLayout.LayoutParams) group.getLayoutParams();
+					parent.addView(imgChooserParent,new AbsoluteLayout.LayoutParams(
+									   (int)(baseSize*mCore.width),
+									   100,//(int)(baseSize*mCore.height),
+									   (int)(baseSize*mCore.left),
+									   pam.y-100//mCore.height))
+								   ));
+				}else{
+					LogUtils.e("group error");
+					parent.addView(imgChooserParent,new AbsoluteLayout.LayoutParams(
+									   (int)(baseSize*mCore.width),
+									   100,//(int)(baseSize*mCore.height),
+									   (int)(baseSize*mCore.left),
+									   (int)(baseSize*(mCore.top)-100)//mCore.height))
+								   ));
+				}
+			}
+			imgChooserParent.setBackgroundColor(0xFFFFFFFF);
 			LinearLayout imgChooser=new LinearLayout(context);
 			imgChooserParent.addView(imgChooser);
 			imgChooser.setOrientation(LinearLayout.HORIZONTAL);
@@ -202,7 +227,7 @@ public class ParagraphText extends EditText implements ItemInterface
 				oneImg.setOnClickListener(imgClickListener);
 				imgChooser.addView(oneImg);
 				ViewGroup.LayoutParams imgparams=oneImg.getLayoutParams();
-				imgparams.height=(int)(baseSize*mCore.height);
+				imgparams.height=(baseSize*mCore.height<100?(int)(baseSize*mCore.height):100);
 				imgparams.width=(int)(imgparams.height*1.125);
 				oneImg.setLayoutParams(imgparams);
 			}
@@ -228,9 +253,9 @@ public class ParagraphText extends EditText implements ItemInterface
 				public void onTextChanged(CharSequence p1, int p2, int p3, int p4)
 				{
 					fixWandH(baseSize);
-					if(withImgSpan){
+					/*if(withImgSpan){
 						changeSpan(baseSize);
-					}
+					}*/
 				}
 
 				@Override
