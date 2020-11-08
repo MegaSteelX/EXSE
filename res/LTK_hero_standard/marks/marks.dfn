@@ -1,0 +1,9 @@
+god:cardface=神
+qlord:lord=1&cardface=群雄
+slord:lord=1&cardface=蜀
+wlord:lord=1&cardface=魏
+ulord:lord=1&cardface=吴
+qun:cardface=群雄
+shu:cardface=蜀
+wei:cardface=魏
+wu:cardface=吴

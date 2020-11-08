@@ -1,0 +1,27 @@
+card:
+	image:null
+	cardface:通常怪兽
+	name:未命名
+	attribute:光
+	level:
+	pendulum:false
+	lpscl:0
+	rpscl:0
+	race:【族】
+	number:EXSE-TC001
+	attack:0
+	deffence:0
+	linknum:0
+	code:99999999
+	edition:DIY Edition
+	author:©高橋和希 スタヅオ・グイス／集英社
+	text:
+	pendtext:
+	show7:0
+	show6:0
+	show5:0
+	show4:0
+	show3:0
+	show2:0
+	show1:0
+	show0:0

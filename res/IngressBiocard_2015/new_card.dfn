@@ -1,0 +1,10 @@
+card:
+	image:null
+	bgcolor:#FF0000
+	cardface:DARK
+	name:NEW_AGENT
+	back:false
+	title:
+	align:
+	text:
+	cell:

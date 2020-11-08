@@ -1,0 +1,13 @@
+PictureLoader/image
+ChosableImage/cardface
+ExchangeImage/lord
+ChosableImage/align
+SinglelineText/blood
+SinglelineText/text
+SinglelineText/name
+FlexImage/textbg
+ParagraphText/comment
+ItemsGroup/skills/childNum:3;childType:ChosableImage!skillbg_SinglelineText!skillname_ParagraphText!skilltext
+SinglelineText/author
+SinglelineText/number
+ChosableImage/logo

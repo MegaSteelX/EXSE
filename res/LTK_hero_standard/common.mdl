@@ -1,0 +1,16 @@
+image/537/852/124/100/clickzone:537×600×124×102
+cardface/712/1000/0/0
+lord/615/929/64/34/index:0
+align/170/195/0/0/childfolder:.
+blood/400/50/190/36/textsize:40;gravity:L;color:#FFFFFF;withicons:true;iconsize1:35;iconsize2:30;icon1width:34
+text/44/245/85/186/gravity:C;textsize:40;color:#FFFF00;vertical:2;withstoke:true;stokecolor:#000000;stokewidth:2
+name/80/320/62/400/gravity:C;textsize:80;color:#FFFFFF;vertical:2;withstoke:true;stokecolor:#000000;stokewidth:6;withshadow:true;shadowx:0;shadowy:5;shadowr:5
+textbg/489/197/150/730/width:40;height:40;source:src.9.png;direction:T
+comment/390/40/200/876/gravity:BR;textsize:23;color:#000000;textstyle:NI;outofzone:fixViewTop
+skills/106/300/50/740/gravity:vertical;childs:…
+skillbg!128!47!0!0…
+%skillname!80!44!21!4!textsize_35-color_#000000-withstoke_true-stokecolor_#FFFFFF-stokewidth_2-gravity_L…
+%skilltext!426!53!139!10!textsize_23-color_#000000-gravity_TL-outofzone_fixViewBottom-withicons_true-iconsize_25
+author/385/20/154/944/gravity:L;textsize:17;color:#000000
+number/75/20/540/944/gravity:R;textsize:17;color:#000000
+logo/0/0/0/0

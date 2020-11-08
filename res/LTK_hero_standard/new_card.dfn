@@ -1,0 +1,13 @@
+card:
+	image:null
+	cardface:群雄
+	align:群
+	lord:0
+	blood:<Q>
+	text:未知頭銜
+	name:無名
+	textbg:0×0
+	skills:群-测试-这是一个危险的操作。;0_群-无试-这不是一个危险的操作。;0
+	author:设计：兆钢十字
+	number:XSE 001
+	logo:
