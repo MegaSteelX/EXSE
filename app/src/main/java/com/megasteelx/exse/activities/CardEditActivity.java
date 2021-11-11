@@ -18,9 +18,7 @@ import java.lang.reflect.*;
 import com.megasteelx.exse.items.*;
 import java.util.*;
 import android.widget.AdapterView.*;
-import android.support.v4.widget.*;
-import com.leon.lfilepickerlibrary.LFilePicker;
-import com.leon.lfilepickerlibrary.utils.Constant;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 
 
@@ -154,8 +152,8 @@ public class CardEditActivity extends Activity
 							cimage.compress(Bitmap.CompressFormat.JPEG, 100, bos); 
 							bos.flush(); 
 							bos.close(); 
-							String hush=FileUtils.FileToHush(file);
-							FileUtils.ForcedCopyFile(filepath,SettingUtils.PATH_WORKSPACE+"/"+hush,true);
+							String hush=FilesUtils.FileToHush(file);
+							FilesUtils.ForcedCopyFile(filepath,SettingUtils.PATH_WORKSPACE+"/"+hush,true);
 							currentImage.returnData(this,hush);
 						} catch (IOException e) { 
 							e.printStackTrace(); 
@@ -163,35 +161,7 @@ public class CardEditActivity extends Activity
 					}
 					break;
 				case SAVEDATA_SELECT_REQUEST:
-					List<String> list = data.getStringArrayListExtra(Constant.RESULT_INFO);
-					if(list.size()>1){
-						LogUtils.e("open savedata_chosed more than 1 files");
-					}else if(list.size()<1){
-						LogUtils.e("open savedata_chosed no files");
-					}else{
-						FileUtils.ClearDir(SettingUtils.PATH_WORKSPACE);
-						openSetTask openTask =new openSetTask(list.get(0),this);
-						String path=list.get(0);
-						String name=new File(path).getName().replace(SettingUtils.SUFFIX_SAVEDATA,"");
-						drawerTitle.setText(name);
-						openTask.setLoadDataComplete(new openSetTask.isLoadDataListener(){
-
-							@Override
-							public void loadComplete()
-							{
-								/*
-								cardSetDex=0;
-								cardSet.createCardSet(SettingUtils.PATH_WORKSPACE+"/set");
-								refreshCardView();
-								*/
-								Intent intent=new Intent(CardEditActivity.this,CardEditActivity.class);
-								startActivity(intent);
-								finish();
-							}
-						});
-						openTask.execute();
-						
-					}
+					//TOFDO USF-get
 					break;
 				default:
 					break;
@@ -241,12 +211,18 @@ public class CardEditActivity extends Activity
 				//TODO delete mode
 				path=StringUtils.fixName(path,".jpg");
 				
-				Toast.makeText(this,FileUtils.saveFile(img,path)?"存储成功":"存储失败，请重试",Toast.LENGTH_SHORT).show();
+				Toast.makeText(this,FilesUtils.saveFile(img,path)?"存储成功":"存储失败，请重试",Toast.LENGTH_SHORT).show();
 				Uri data = Uri.parse(path);
 				img_view.setDrawingCacheEnabled(false);
 				sendBroadcast(new  Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, data)); 
 				
 				//OtherUtils.updateMediaLibraryInsert(this,path);
+			break;
+			case android.R.id.home:
+				DrawerLayout drawerLay=findViewById(R.id.cardparentview);
+				if(!drawerLay.isDrawerOpen(Gravity.START)){
+					drawerLay.openDrawer(Gravity.START);
+				}
 			break;
 			default:
 			LogUtils.e("clicked undefined button");
@@ -261,7 +237,18 @@ public class CardEditActivity extends Activity
 		
 		setContentView(R.layout.activity_card_edit);
 		Toolbar tb=findViewById(R.id.cv_toolbar);
-		tb.setBackgroundColor(0xFF000000);
+		tb.setBackgroundColor(Color.BLACK);
+		tb.setNavigationIcon(R.drawable.icon_list);
+		/*tb.setNavigationOnClickListener(new View.OnClickListener(){
+
+				@Override
+				public void onClick(View p1)
+				{
+					if(!drawerLay.isDrawerOpen(Gravity.START)){
+						drawerLay.openDrawer(Gravity.START);
+					}
+				}
+			});*/
 		setActionBar(tb);
 		//set card list
 		cardSet=new CardSet(SettingUtils.PATH_WORKSPACE+"/set");
@@ -278,7 +265,7 @@ public class CardEditActivity extends Activity
 		for(int i=0;i<geneList.length;i++){
 			genesList.add(geneList[i]);
 		}
-		SpinnerAdapter geneAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,genesList);
+		SpinnerAdapter geneAdapter=new ArrayAdapter<String>(this,R.layout.text_cv_spinner,genesList);
 		drawerGene.setAdapter(geneAdapter);
 		int geneChose=genesList.indexOf(SettingUtils.CARD_SET_STYLE);
 		if(geneChose<0){
@@ -293,7 +280,7 @@ public class CardEditActivity extends Activity
 				{
 					if(!SettingUtils.CARD_SET_STYLE.equals(genesList.get(p3))){
 						saveSetFile(false);
-						FileUtils.ClearDir(SettingUtils.PATH_WORKSPACE);
+						FilesUtils.ClearDir(SettingUtils.PATH_WORKSPACE);
 						SettingUtils.setCurrentStyle(CardEditActivity.this,genesList.get(p3));
 						CardSetUtils.PrepareCardSet(SettingUtils.PATH_WORKSPACE+"/set",SettingUtils.SETFILE_HEAD,genesList.get(p3));
 						Intent intent=new Intent(CardEditActivity.this,CardEditActivity.class);
@@ -330,7 +317,7 @@ public class CardEditActivity extends Activity
 				{
 					switch(p1.getId()){
 					case R.id.cv_addc:
-						cardSet.addCard(FileUtils.FileToStrings(SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/new_card.dfn").replace("card:","").trim());
+						cardSet.addCard(FilesUtils.FileToStrings(SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/new_card.dfn").replace("card:","").trim());
 						barAdapter.notifyDataSetChanged();
 						break;
 					case R.id.cv_open:
@@ -338,16 +325,8 @@ public class CardEditActivity extends Activity
 								@Override
 								public void onClick(DialogInterface p1, int p2)
 								{
-									new LFilePicker()
-											.withActivity(CardEditActivity.this)
-											.withStartPath(SettingUtils.PATH_SAVEDATA)
-											.withRequestCode(SAVEDATA_SELECT_REQUEST)
-											.withMutilyMode(false)
-											.withTitle("选择存档文件")
-											.withFileFilter(new String[]{SettingUtils.SUFFIX_SAVEDATA})
-											.start();
-
-										}
+									//TODO USF
+									}
 							}).setNegativeButton(R.string.negative, null
 							).show();
 						break;
@@ -356,7 +335,7 @@ public class CardEditActivity extends Activity
 									@Override
 									public void onClick(DialogInterface p1, int p2)
 									{
-										FileUtils.ClearDir(SettingUtils.PATH_WORKSPACE);
+										FilesUtils.ClearDir(SettingUtils.PATH_WORKSPACE);
 										CardSetUtils.PrepareCardSet(SettingUtils.PATH_WORKSPACE+"/set",SettingUtils.SETFILE_HEAD,SettingUtils.CARD_SET_STYLE);
 										cardSet.createCardSet(SettingUtils.PATH_WORKSPACE+"/set");
 										refreshCardView();

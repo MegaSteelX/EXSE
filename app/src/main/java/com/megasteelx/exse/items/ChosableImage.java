@@ -124,7 +124,7 @@ public class ChosableImage extends ImageView implements ItemInterface
         return mChoice;
     }
     private String[] getNameList(String rootPath){
-		String[] nameFile=FileUtils.FileToLines(rootPath+"/"+mCore.name+"/names.dfn");
+		String[] nameFile=FilesUtils.FileToLines(rootPath+"/"+mCore.name+"/names.dfn");
 		return nameFile;//.trim().split("\n");
 	}
     public boolean checkImage(){

@@ -6,7 +6,7 @@ import java.security.*;
 import java.nio.channels.*;
 import android.graphics.*;
 
-public class FileUtils
+public class FilesUtils
 {
 
 	public static boolean saveFile(Bitmap bm,String path){

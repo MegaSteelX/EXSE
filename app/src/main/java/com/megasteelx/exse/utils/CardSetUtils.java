@@ -12,7 +12,7 @@ public class CardSetUtils
 		try
 		{
 			FileWriter setWriter=new FileWriter(new File(path));
-			String newCard=FileUtils.FileToStrings(SettingUtils.PATH_SOURCE+"/"+cardSetStyle+"/new_card.dfn");
+			String newCard=FilesUtils.FileToStrings(SettingUtils.PATH_SOURCE+"/"+cardSetStyle+"/new_card.dfn");
 			setWriter.write(cardSetHead+"\nstyle:"+cardSetStyle+"\n"+newCard);
 			setWriter.close();
 		}
@@ -23,11 +23,11 @@ public class CardSetUtils
     }
 
 	public static String[] getCardSetByFile(String path){
-		String setFileString=FileUtils.FileToStrings(path);
+		String setFileString=FilesUtils.FileToStrings(path);
 		return setFileString.split("\ncard:\n");
 	}
 	public static void writeCardSetToFile(CardSet cSet,String path){
-		FileUtils.saveStringToFile(path,cSet.savingCardSet(SettingUtils.SETFILE_HEAD),true);
+		FilesUtils.saveStringToFile(path,cSet.savingCardSet(SettingUtils.SETFILE_HEAD),true);
 	}
 	public static void saveCardSet(Context context,CardSet cSet,String path,String name,boolean ifExit){
 		writeCardSetToFile(cSet,SettingUtils.PATH_WORKSPACE+"/set");

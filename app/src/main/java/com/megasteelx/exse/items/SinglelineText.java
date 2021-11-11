@@ -48,7 +48,7 @@ public class SinglelineText extends EditText implements ItemInterface
 		//获取字体
 		File fontdir=new File(SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/fonts");
 		String namedfn="names.dfn";
-		String[]namespair=FileUtils.FileToLines(fontdir.getPath()+"/"+namedfn);//.trim().split("\n");
+		String[]namespair=FilesUtils.FileToLines(fontdir.getPath()+"/"+namedfn);//.trim().split("\n");
 		boolean nameReadFlag=false;
 		for(int i=0;i<namespair.length;i++){
 			if(namespair[i].startsWith(mCore.getName())){
@@ -441,10 +441,16 @@ public class SinglelineText extends EditText implements ItemInterface
 			
 		}
 	}
-	protected void removeStroke(){
+
+	@Override
+	public void setVisibility(int visibility)
+	{
+		// TODO: Implement this method
+		super.setVisibility(visibility);
 		if(withStoke){
-			stokeText=((AbsoluteLayout)getParent()).findViewById(stokeTextId);
-			stokeText.setText("");
+			TextView stokeText=((AbsoluteLayout)this.getParent()).findViewById(stokeTextId);
+			stokeText.setVisibility(visibility);
 		}
 	}
+	
 }

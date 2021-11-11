@@ -45,7 +45,7 @@ public saveSetTask(String[] names,Context context,boolean ifEnd){
 		try
 		{	
 			if(INSERT_STYLE){
-				FileUtils.zip(SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE,SettingUtils.PATH_WORKSPACE+"/"+SettingUtils.CARD_SET_STYLE+SettingUtils.SUFFIX_STYLE);
+				FilesUtils.zip(SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE,SettingUtils.PATH_WORKSPACE+"/"+SettingUtils.CARD_SET_STYLE+SettingUtils.SUFFIX_STYLE);
 			}
 			//处理多余的图像文件
 			String[]deletedImgs=new File(SettingUtils.PATH_WORKSPACE).list(new FilenameFilter(){
@@ -64,7 +64,7 @@ public saveSetTask(String[] names,Context context,boolean ifEnd){
 				}
 			}
 			//图像处理完毕
-			FileUtils.zip(SettingUtils.PATH_WORKSPACE,filePath);
+			FilesUtils.zip(SettingUtils.PATH_WORKSPACE,filePath);
 			
 		}catch(Exception e){
 		}

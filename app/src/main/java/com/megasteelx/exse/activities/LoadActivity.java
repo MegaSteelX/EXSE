@@ -75,7 +75,7 @@ public class LoadActivity extends Activity
 					@Override
 					public void onClick(DialogInterface p1, int p2)
 					{
-						FileUtils.ClearDir(SettingUtils.PATH_WORKSPACE);
+						FilesUtils.ClearDir(SettingUtils.PATH_WORKSPACE);
 						CardSetUtils.PrepareCardSet(SettingUtils.PATH_WORKSPACE+"/set",SettingUtils.SETFILE_HEAD,cStyle);
 						startCardEdit();
 					}

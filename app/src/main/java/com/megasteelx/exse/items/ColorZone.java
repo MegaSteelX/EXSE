@@ -98,10 +98,10 @@ public class ColorZone extends ImageView implements ItemInterface
 			@Override
 			public void onClick(View p1)
 			{
-				ColorPickerDialog.OnColorChangedListener lis=new ColorPickerDialog.OnColorChangedListener(){
+				ColorPickerDialog.OnColorPickedListener lis=new ColorPickerDialog.OnColorPickedListener(){
 
 					@Override
-					public void onColorChanged(int color)
+					public void onColorPicked(int color)
 					{
 						ColorZone.this.setBackgroundColor(color);
 						mCore.setData(OtherUtils.getHexString(color));
@@ -111,7 +111,7 @@ public class ColorZone extends ImageView implements ItemInterface
 				};
 				new ColorPickerDialog.Builder(context, Color.parseColor(mCore.getData()))   
 					.setHexValueEnabled(true)               //是否显示颜色值
-					.setOnColorChangedListener(lis) //设置监听颜色改变的监听器
+					.setOnColorPickedListener(lis) //设置监听颜色改变的监听器
 					.build()
 					.show();
 			}

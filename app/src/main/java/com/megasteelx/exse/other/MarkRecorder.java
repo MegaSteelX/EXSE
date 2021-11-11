@@ -33,7 +33,7 @@ public class MarkRecorder
 		return changed;
 	}
 	public void checkMarks(CardData cData,String markFilePath){
-		String[] tempStrings=FileUtils.FileToLines(markFilePath);//.trim().split("\n");
+		String[] tempStrings=FilesUtils.FileToLines(markFilePath);//.trim().split("\n");
 		String markName="",judge="";
 		for(int i=0;i<tempStrings.length;i++){
 			try{

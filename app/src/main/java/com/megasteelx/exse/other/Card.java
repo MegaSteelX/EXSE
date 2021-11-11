@@ -40,7 +40,7 @@ public class Card
 		//path:*.mdl
 		if(!new File(path).exists())LogUtils.e(path+"_is not avaliable file");
 		//Log.e("",FileUtils.FileToString(path));
-		String []styleDescs=FileUtils.FileToLines(path);//.split("\n");
+		String []styleDescs=FilesUtils.FileToLines(path);//.split("\n");
 		String []tempString=null;
 		for(int i=0;i<styleDescs.length;i++){
 			ItemCore tempItem=new ItemCore();
@@ -73,7 +73,7 @@ public class Card
 	public void readCardItems(String path){
 		//path:*.dfn
 		if(!new File(path).exists())LogUtils.e(path+"_is not avaliable file");
-		String []styleDescs=FileUtils.FileToLines(path);//.split("\n");
+		String []styleDescs=FilesUtils.FileToLines(path);//.split("\n");
 		String []tempString;
 		for(int i=0;i<styleDescs.length;i++){
 			ItemCore tempItem=new ItemCore();

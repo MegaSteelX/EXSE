@@ -119,10 +119,11 @@ public class ItemsGroup extends ImageView implements ItemInterface {
 	{
 	    String[]dataSentence=data.split("_"),dataPart,childDatas;
         int extTop=0,extLeft=0;
+		
 		for (int i=0;i < dataSentence.length;i++)
 		{
 			setCurrentPosi(i);
-			if (i > 0)addItem();
+			if (i > 0&&(childIds==null||dataSentence.length>childIds.size()))addItem();
             dataPart = dataSentence[i].split(";");
             if (dataPart.length != 2)
 			{
@@ -159,13 +160,14 @@ public class ItemsGroup extends ImageView implements ItemInterface {
 	    int itemId,id;boolean isRedraw=false,isRedrawed=false,isFocusing=false;
 		int redawi=0;
 		String[]datas=data.split("×");
+		partNum=childIds.size();
         for (int i=0;i < partNum;i++)
 		{
             for (int j=0;j < childPerPart;j++)
 			{
 				for (int k=1;k < datas.length - 1;k++)
 				{
-					isRedraw = (childCores.get(i)[j].getData().equals(datas[k]));
+					isRedraw |= (childCores.get(i)[j].getData().equals(datas[k]));
 				}
 				isFocusing=childCores.get(i)[j].getData().equals(datas[0]);
 				if(isRedraw)redawi=i;
@@ -182,10 +184,6 @@ public class ItemsGroup extends ImageView implements ItemInterface {
 						parent.findViewById(id).setLayoutParams(new AbsoluteLayout.LayoutParams(0, 0, 0, 0));
 						//parent.removeView(parent.findViewById(id));
 						parent.findViewById(id).setVisibility(View.GONE);
-						if (childCores.get(0)[j].getType().equals("SinglelineText"))
-						{
-							((SinglelineText)parent.findViewById(id)).removeStroke();
-						}
 					}
 					childCores.get(i)[j].drawView(parent, context, baseSize, childIds.get(i)[j], false);
 					//if(isRedraw&&isFocusing){
@@ -363,7 +361,7 @@ public class ItemsGroup extends ImageView implements ItemInterface {
 				 if(f.trim().equals("")){
 				 throw new NullPointerException("empty mrk-file");
 				 }*/
-				String[] str=FileUtils.FileToLines(path);//f.trim().split("\n");
+				String[] str=FilesUtils.FileToLines(path);//f.trim().split("\n");
 				String[] seprated,reason,results;
 				for (int i=0;i < str.length;i++)
 				{
@@ -512,14 +510,14 @@ public class ItemsGroup extends ImageView implements ItemInterface {
 						{
 							//parent.removeView(
 							((View)(parent.findViewById(ids[i]))).setVisibility(View.GONE);
-							if(childCores.get(0)[i].getType().equals("SinglineText")){
-								((SinglelineText)(parent.findViewById(ids[i]))).removeStroke();
-							}
 						}
 						childIds.remove(partNum);
 						childCores.remove(partNum);
 						childTrans.remove(partNum);
 						//refreshView(parent,context,baseSize);
+						if(currentPosi==partNum){
+							setCurrentPosi(partNum-1);
+						}
 					}
 					else
 					{

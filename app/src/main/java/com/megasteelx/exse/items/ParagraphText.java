@@ -44,7 +44,7 @@ public class ParagraphText extends EditText implements ItemInterface
 		//获取字体
 		File fontdir=new File(SettingUtils.PATH_SOURCE+"/"+SettingUtils.CARD_SET_STYLE+"/fonts");
 		String namedfn="names.dfn";
-		String[]namespair=FileUtils.FileToLines(fontdir.getPath()+"/"+namedfn);//.trim().split("\n");
+		String[]namespair=FilesUtils.FileToLines(fontdir.getPath()+"/"+namedfn);//.trim().split("\n");
 		boolean nameReadFlag=false;
 		for(int i=0;i<namespair.length;i++){
 			if(namespair[i].startsWith(mCore.getName())){
@@ -362,7 +362,7 @@ public class ParagraphText extends EditText implements ItemInterface
 			switch(mOOZmode){
 				case fixTextSize:
 					setTextSize(TypedValue.COMPLEX_UNIT_PX,getTextSize()-1);
-					Log.d("",getTextSize()+"|"+realTextLength+"|"+maxFullCharNum);
+					LogUtils.i(getTextSize()+"|"+realTextLength+"|"+maxFullCharNum);
 					break;
 				case fixViewTop:
 					params.y-=1;
